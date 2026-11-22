@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.vercel/
+.playwright-mcp/
+.DS_Store
+Thumbs.db
+# Brief from the company: keep it out of the public repo
+*.pdf

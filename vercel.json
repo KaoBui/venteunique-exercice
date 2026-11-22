@@ -1,0 +1,5 @@
+{
+  "installCommand": "npm install --prefix prototype",
+  "buildCommand": "npm run build --prefix prototype",
+  "outputDirectory": "prototype/dist"
+}

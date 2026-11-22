@@ -1,0 +1,167 @@
+{
+  "fileKey": "q1ML7KrPb3usTMBe3dbc3M",
+  "fileUrl": "https://www.figma.com/design/q1ML7KrPb3usTMBe3dbc3M/Vente-unique",
+  "sessionId": "1f498b2a-9cac-466c-b6fa-4f2818b8b37c",
+  "completedSteps": [
+    "foundations/variables",
+    "foundations/text-styles",
+    "foundations/effect-styles",
+    "pages",
+    "foundations/specimen",
+    "components/icons",
+    "components/logo",
+    "components/promo-bar",
+    "components/header",
+    "components/button",
+    "components/chip",
+    "components/pill",
+    "components/carte-de-poste",
+    "components/budget-tracker",
+    "screens/ma-checklist-full",
+    "screens/ma-checklist-375x812",
+    "assets/prestige-photo",
+    "slides/text-styles",
+    "slides/20-drafts",
+    "slides/styled-08-insight",
+    "slides/styled-14-maquette",
+    "slides/final-02-cadrage",
+    "slides/final-02-methode",
+    "slides/final-03-decouvrir",
+    "slides/final-04-persona",
+    "slides/final-05-insight",
+    "slides/final-06-concept",
+    "slides/final-07-parcours",
+    "slides/final-08-livrer",
+    "slides/final-08-livrer"
+  ],
+  "slides": {
+    "Brouillons wrapper": "16:8",
+    "Direction visuelle row": "17:2",
+    "Styled 08 Insight": "17:3",
+    "Styled 14 Maquette": "17:37",
+    "draftIds": [
+      "16:9",
+      "16:25",
+      "16:47",
+      "16:67",
+      "16:88",
+      "16:106",
+      "16:123",
+      "16:144",
+      "16:160",
+      "16:166",
+      "16:181",
+      "16:202",
+      "16:223",
+      "16:244",
+      "16:258",
+      "16:272",
+      "16:294",
+      "16:315",
+      "16:334",
+      "16:350"
+    ],
+    "Slide 01 Cadrage (final, user layout)": "27:849",
+    "Presentation finale wrapper": "27:492",
+    "Slide 02 Méthode (final)": "36:140",
+    "Slide 03 Découvrir constats (final)": "38:140",
+    "Slide 04 Définir persona (final)": "40:140",
+    "Slide 05 Définir insight (final)": "42:143",
+    "Slide 06 Idéer et prioriser (final)": "70:140",
+    "Slide 07 Concept (final)": "46:171",
+    "Slide 08 Parcours (final)": "48:140",
+    "Slide 09 Livrer (final)": "53:140"
+  },
+  "screens": {
+    "Ma checklist — page complète": "11:2",
+    "Ma checklist — mobile 375×812": "11:163",
+    "Ma checklist — desktop 1440": "19:218"
+  },
+  "desktopComponents": {
+    "Header/Desktop": "18:41"
+  },
+  "images": {
+    "PRESTIGE ensemble (Carte de poste/Choisi > Vignette 9:61)": "4928fd7249c2df927395911eb0509aeb1d8cb5db"
+  },
+  "entities": {
+    "collections": {
+      "Primitives": "VariableCollectionId:6:2",
+      "Color": "VariableCollectionId:6:25",
+      "Dimensions": "VariableCollectionId:6:57"
+    },
+    "effectStyles": {
+      "Shadow/Soft": "S:ab31e5550ee18a2a347eddcbbb72692eecbbc906,",
+      "Shadow/Raised": "S:a2dd5684554bdfce6058b909e6a9e22454b8e836,"
+    },
+    "pages": {
+      "Cover": "0:1",
+      "Présentation": "6:94",
+      "Écrans": "6:95",
+      "Composants": "6:96",
+      "Foundations": "6:97"
+    },
+    "frames": {
+      "Foundations sheet": "6:98",
+      "Icônes": "8:2",
+      "Navigation": "8:78",
+      "Actions": "9:29",
+      "Carte de poste section": "9:46",
+      "BudgetTracker section": "10:32"
+    },
+    "components": {
+      "icons": {
+        "Menu": "8:5",
+        "Help": "8:10",
+        "Account": "8:14",
+        "Cart": "8:18",
+        "Search": "8:22",
+        "Camera": "8:26",
+        "ChevronRight": "8:29",
+        "ChevronDown": "8:32",
+        "ChevronLeft": "8:35",
+        "Check": "8:38",
+        "Warning": "8:43",
+        "Edit": "8:46",
+        "Close": "8:49",
+        "Heart": "8:52",
+        "Plus": "8:55",
+        "Truck": "8:60"
+      },
+      "Logo": "8:77",
+      "Promo bar": "8:79",
+      "Header/Mobile": "8:81",
+      "Button (set)": "9:38",
+      "Button variants": {
+        "Primary/Default": "9:30",
+        "Primary/Small": "9:32",
+        "Secondary/Default": "9:34",
+        "Secondary/Small": "9:36"
+      },
+      "Chip (set)": "9:43",
+      "Pill/Promo": "9:44",
+      "Carte de poste (set)": "9:77",
+      "Carte de poste variants": {
+        "À choisir": "9:48",
+        "Choisi": "9:59",
+        "J'ai déjà": "9:71"
+      },
+      "BudgetTracker (set)": "10:121",
+      "BudgetTracker variants": {
+        "Default/Vide": "10:34",
+        "Default/En cours": "10:44",
+        "Default/Seuil atteint": "10:58",
+        "Default/Dépassé": "10:74",
+        "Default/Garde-fou": "10:89",
+        "Compact/En cours": "10:99",
+        "Compact/Dépassé": "10:108"
+      }
+    },
+    "componentProps": {
+      "Button.Label": "Label#9:0",
+      "Chip.Label": "Label#9:5",
+      "Pill.Label": "Label#9:8",
+      "Carte.Besoin": "Besoin#9:9"
+    }
+  },
+  "notes": "Editorial text styles use Fraunces as a stand-in for Recoleta (commercial). Variable names: color/*, space/*, radius/*, size/*, border-width/*. Text styles: Editorial/*, UI/*. Screen example uses the real PRESTIGE 90x190 set from Les Essentiels at 399,99 € (2026-11-21); delivery estimate 63 € is illustrative. Next: Présentation deck (1920x1080 frames), then Cover. Final slides: minimal white style cloned from the Brouillon drafts (not the beige direction slides). Persona updated 2026-11-22: Léa 25 ans, jeune active (2e année CDI), budget ~1500€ on own savings, compares with IKEA/Leboncoin. Planned deck: 06 Concept, 07 Parcours, 08 Maquette (desktop 1440), 09 Composant, 10 Mesurer & suite. TODO slide 08: remove date mentions (Livré avant le 12 déc.) from hi-fi screen. Deck structure decided: slides 01-07 end at Parcours; Livrer = maquette + composant + DS shown in a separate tab. No measuring/follow-up slide (user: not needed for this exercise)."
+}
