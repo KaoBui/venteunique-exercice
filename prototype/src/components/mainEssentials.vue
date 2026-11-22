@@ -1,6 +1,6 @@
 <script setup>
-import UiChip from './UiChip.vue'
-import ProductCard from './ProductCard.vue'
+import chipOption from './chipOption.vue'
+import cardProductBox from './cardProductBox.vue'
 import { ESSENTIALS_LISTING, ESSENTIALS_COUNT } from '../data/catalog.js'
 import { useProject } from '../composables/useProject.js'
 
@@ -25,15 +25,15 @@ const filters = ['Catégorie', 'Couleur', 'Matière', 'Prix', 'Tous les filtres'
     </section>
 
     <div class="filters">
-      <UiChip v-for="f in filters" :key="f">{{ f }}</UiChip>
+      <chipOption v-for="f in filters" :key="f">{{ f }}</chipOption>
       <span class="spacer" />
-      <UiChip>Trier par : pertinence</UiChip>
+      <chipOption>Trier par : pertinence</chipOption>
     </div>
 
     <p class="t-caption">{{ ESSENTIALS_COUNT }} produits</p>
 
     <div class="grid">
-      <ProductCard
+      <cardProductBox
         v-for="p in products"
         :key="p.id"
         :product="p"
@@ -56,7 +56,7 @@ const filters = ['Catégorie', 'Couleur', 'Matière', 'Prix', 'Tous les filtres'
 .breadcrumb {
   font-size: 12px;
   line-height: 16px;
-  color: var(--color-text-default);
+  color: var(--text-default);
 }
 .banner {
   display: flex;
@@ -64,7 +64,7 @@ const filters = ['Catégorie', 'Couleur', 'Matière', 'Prix', 'Tous les filtres'
   gap: 32px;
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-8);
   border-radius: var(--radius-xl);
-  background: var(--color-surface-editorial);
+  background: var(--surface-editorial);
 }
 .banner__text {
   flex: 1;
@@ -80,7 +80,7 @@ const filters = ['Catégorie', 'Couleur', 'Matière', 'Prix', 'Tous les filtres'
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-l);
-  background: var(--color-surface-muted);
+  background: var(--surface-muted);
 }
 .filters {
   display: flex;

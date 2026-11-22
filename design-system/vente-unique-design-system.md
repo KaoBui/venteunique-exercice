@@ -4,6 +4,22 @@
 > Je n'ai pas accès au Figma ni au code source de Vente-unique : **les valeurs sont celles du site, les noms de tokens sont les miens.**
 > Captures de référence : [captures/](captures/) · Logo : [assets/logo-vente-unique.svg](assets/logo-vente-unique.svg) · Tokens : [tokens.json](tokens.json)
 
+> **Mise à jour du 22 nov. : alignement sur Minos** (le design system de Vente-unique, décrit sur florianfaure.com/work/minos).
+> Les tokens sont maintenant sur deux niveaux : des **primitives** (`--primitive-squid-opacity-950`) et des **rôles sémantiques** (`--interactive-primary-background`). Les composants ne lisent que les rôles.
+> Les composants portent le même nom en camelCase dans Figma et en Vue (`budgetTracker`, `cardProductBox`).
+> Les noms `color.*` utilisés plus bas correspondent ainsi :
+>
+> | Ancien nom | Rôle sémantique |
+> | --- | --- |
+> | `color.text.*` | `--text-*` |
+> | `color.action.primary` | `--interactive-primary-background` |
+> | `color.surface.*` | `--surface-*` |
+> | `color.border.*` | `--border-*` |
+> | `color.status.success` | `--feedback-success` |
+> | `color.promo.*` | `--feedback-promo-text` / `--feedback-promo-background` |
+>
+> La source de vérité est [tokens.json](tokens.json) et `prototype/src/styles/tokens/`. Les règles sont dans `prototype/DESIGN-RULES.md`.
+
 **Attention, période Black Friday** : au moment du relevé, la home affiche un habillage saisonnier (bordeaux #2A0B16, vidéo, compte à rebours). Il est exclu du système ci-dessous.
 
 ---

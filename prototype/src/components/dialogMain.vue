@@ -40,10 +40,10 @@ function onBackdrop(e) {
   border: 0;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-raised);
-  color: var(--color-text-default);
+  color: var(--text-default);
 }
 .dialog::backdrop {
-  background: rgba(19, 12, 12, 0.4);
+  background: var(--surface-overlay);
 }
 .dialog__inner {
   display: flex;
@@ -61,10 +61,10 @@ function onBackdrop(e) {
   width: 36px;
   height: 36px;
   flex-shrink: 0;
-  border: 1px solid var(--color-border-default);
+  border: 1px solid var(--border-default);
   border-radius: 18px;
   font-size: 20px;
   line-height: 1;
-  color: var(--color-text-strong);
+  color: var(--text-strong);
 }
 </style>

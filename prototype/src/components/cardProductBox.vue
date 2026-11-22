@@ -27,11 +27,11 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
         :aria-label="favorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
         @click="$emit('toggle-favorite')"
       >
-        <svg v-if="favorite" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+        <svg v-if="favorite" class="card__fav-on" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
           <path
             d="M12 20.5s-7.5-4.6-7.5-10.1A4.4 4.4 0 0 1 12 7.6a4.4 4.4 0 0 1 7.5 2.8c0 5.5-7.5 10.1-7.5 10.1Z"
-            fill="#EC002E"
-            stroke="#EC002E"
+            fill="currentColor"
+            stroke="currentColor"
             stroke-width="1.75"
             stroke-linejoin="round"
           />
@@ -77,7 +77,7 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-l);
-  background: var(--color-surface-subtle);
+  background: var(--surface-subtle);
   overflow: hidden;
 }
 .card__photo {
@@ -85,6 +85,9 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
   height: 100%;
   object-fit: contain;
   mix-blend-mode: darken;
+}
+.card__fav-on {
+  color: var(--interactive-favorite-active);
 }
 .card__fav {
   position: absolute;
@@ -96,7 +99,7 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
   align-items: center;
   justify-content: center;
   border-radius: 18px;
-  background: var(--color-surface-default);
+  background: var(--surface-default);
 }
 .card__infos {
   display: flex;
@@ -107,13 +110,13 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
 .card__name {
   font-size: 14px;
   line-height: 20px;
-  color: var(--color-text-default);
+  color: var(--text-default);
 }
 .card__price {
   font-size: 16px;
   line-height: 24px;
   font-weight: 600;
-  color: var(--color-text-strong);
+  color: var(--text-strong);
 }
 .card__delivery {
   display: flex;
@@ -122,7 +125,7 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: var(--color-status-success);
+  color: var(--feedback-success);
 }
 .card__choose {
   display: inline-flex;
@@ -132,21 +135,21 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
   width: 100%;
   height: var(--size-control-small);
   padding: var(--space-2) var(--space-4);
-  border: 1px solid var(--color-border-default);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-xl);
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
-  color: var(--color-text-strong);
-  background: var(--color-surface-default);
+  color: var(--text-strong);
+  background: var(--surface-default);
 }
 .card__choose:hover:not(:disabled) {
-  border-color: var(--color-text-strong);
+  border-color: var(--text-strong);
 }
 .card__choose--chosen {
-  border-color: var(--color-status-success);
-  background: var(--color-status-success);
-  color: var(--color-text-inverse);
+  border-color: var(--feedback-success);
+  background: var(--feedback-success);
+  color: var(--text-inverse);
   cursor: default;
 }
 </style>

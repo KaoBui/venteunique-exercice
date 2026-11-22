@@ -9,8 +9,8 @@
   align-items: center;
   justify-content: center;
   padding: 6px 12px;
-  background: var(--color-surface-inverse);
-  color: var(--color-text-inverse);
+  background: var(--surface-inverse);
+  color: var(--text-inverse);
   font-size: 12px;
   line-height: 16px;
 }

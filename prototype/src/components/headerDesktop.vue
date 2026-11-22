@@ -47,8 +47,8 @@ const navAfter = ['Corner Prestige', 'Espace Pro']
 
 <style scoped>
 .header {
-  background: var(--color-surface-default);
-  border-bottom: 1px solid var(--color-border-subtle);
+  background: var(--surface-default);
+  border-bottom: 1px solid var(--border-subtle);
 }
 .header__top {
   display: flex;
@@ -66,14 +66,14 @@ const navAfter = ['Corner Prestige', 'Espace Pro']
   gap: 12px;
   height: 48px;
   padding: 0 12px;
-  border: 1px solid var(--color-border-strong);
+  border: 1px solid var(--border-strong);
   border-radius: 14px;
-  background: var(--color-surface-subtle);
+  background: var(--surface-subtle);
 }
 .search__placeholder {
   flex: 1;
   font-size: 14px;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
 }
 .header__action {
   display: inline-flex;
@@ -82,7 +82,7 @@ const navAfter = ['Corner Prestige', 'Espace Pro']
   font-size: 14px;
   line-height: 20px;
   font-weight: 500;
-  color: var(--color-text-default);
+  color: var(--text-default);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -97,9 +97,9 @@ const navAfter = ['Corner Prestige', 'Espace Pro']
   height: 18px;
   padding: 0 5px;
   border-radius: 9px;
-  background: var(--color-brand-default);
-  color: var(--color-text-inverse);
-  font-size: 11px;
+  background: var(--badge-background);
+  color: var(--text-inverse);
+  font-size: var(--font-size-min);
   line-height: 18px;
   font-weight: 600;
   text-align: center;
@@ -118,7 +118,7 @@ const navAfter = ['Corner Prestige', 'Espace Pro']
   border-bottom: 2px solid transparent;
   font-size: 16px;
   line-height: 24px;
-  color: var(--color-text-default);
+  color: var(--text-default);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -128,13 +128,13 @@ const navAfter = ['Corner Prestige', 'Espace Pro']
 }
 .nav-item--active {
   font-weight: 500;
-  color: var(--color-text-strong);
-  border-bottom-color: var(--color-text-strong);
+  color: var(--text-strong);
+  border-bottom-color: var(--text-strong);
 }
 .nav-sep {
   width: 1px;
   height: 28px;
   margin-bottom: 14px;
-  background: var(--color-border-subtle);
+  background: var(--border-subtle);
 }
 </style>

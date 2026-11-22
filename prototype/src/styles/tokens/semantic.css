@@ -1,0 +1,80 @@
+/*
+ * Layer 2 — semantic roles. Components read ONLY these.
+ * Naming follows Minos: --<domain>-<role>-<property> (e.g. --interactive-primary-background,
+ * the one name confirmed by the Minos case study; the others extend its pattern).
+ * A brand mode (Habitat) would override this file only, never the components.
+ */
+:root {
+  /* Text */
+  --text-strong: var(--primitive-squid-opacity-950);
+  --text-default: var(--primitive-squid-opacity-800);
+  --text-muted: var(--primitive-squid-opacity-600);
+  --text-inverse: var(--primitive-white);
+  --text-brand: var(--primitive-red-600);
+
+  /* Surfaces */
+  --surface-default: var(--primitive-white);
+  --surface-subtle: var(--primitive-squid-opacity-100);
+  --surface-muted: var(--primitive-grey-100);
+  --surface-editorial: var(--primitive-sand-100);
+  --surface-inverse: var(--primitive-black);
+  --surface-overlay: var(--primitive-squid-opacity-400);
+
+  /* Borders */
+  --border-strong: var(--primitive-squid-opacity-600);
+  --border-default: var(--primitive-squid-opacity-500);
+  --border-subtle: var(--primitive-squid-opacity-300);
+  --border-selected: var(--primitive-squid-opacity-800);
+
+  /* Interactive */
+  --interactive-primary-background: var(--primitive-squid-opacity-950);
+  --interactive-primary-background-hover: var(--primitive-squid-opacity-800);
+  --interactive-primary-text: var(--primitive-white);
+  --interactive-secondary-border: var(--primitive-squid-opacity-500);
+  --interactive-secondary-border-hover: var(--primitive-squid-opacity-950);
+  --interactive-favorite-active: var(--primitive-red-600);
+
+  /* Feedback */
+  --feedback-success: var(--primitive-green-700);
+  --feedback-danger: var(--primitive-red-600);
+  --feedback-promo-text: var(--primitive-orange-700);
+  --feedback-promo-background: var(--primitive-orange-50);
+  --badge-background: var(--primitive-red-600);
+
+  /* Meter (budgetTracker gauge) */
+  --meter-track: var(--primitive-grey-100);
+  --meter-fill: var(--primitive-squid-opacity-950);
+  --meter-fill-secondary: var(--primitive-squid-opacity-600);
+  --meter-fill-danger: var(--primitive-red-600);
+  --meter-marker: var(--primitive-squid-opacity-950);
+
+  /* Typography */
+  --font-ui: 'Poppins', sans-serif;
+  --font-editorial: 'Recoleta', 'Fraunces', Georgia, serif;
+  --font-size-min: 12px;
+
+  /* Scales (dimension tokens, shared by every brand) */
+  --radius-xs: 6px;
+  --radius-s: 10px;
+  --radius-m: 14px;
+  --radius-l: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-16: 64px;
+
+  --shadow-soft: 0 4px 12px var(--primitive-squid-opacity-100);
+  --shadow-raised: 0 10px 20px rgba(0, 0, 0, 0.12);
+
+  --size-control: 48px;
+  --size-control-small: 36px;
+  --border-width-default: 1px;
+  --border-width-selected: 2px;
+}

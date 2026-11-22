@@ -1,0 +1,73 @@
+{
+  "source": "https://www.vente-unique.com/c/les-essentiels",
+  "releve_le": "2026-11-22",
+  "note": "Nom, prix et image relevés sur les fiches produit (données structurées schema.org). Le nom suit la variante couleur par défaut de la fiche.",
+  "produits": [
+    {
+      "nom": "Bureau console extensible avec 2 tiroirs - Noir et naturel - LOAVIA",
+      "prix_eur": 149.99,
+      "url": "https://www.vente-unique.com/p/bureau-console-extensible-avec-2-tiroirs-blanc-et-naturel-loavia",
+      "image": "https://www.vente-unique.com/thumbnails/product/1809/1809645/large/0/44461937.jpg"
+    },
+    {
+      "nom": "Meuble TV avec 3 portes et 1 niche - Anthracite et naturel - LOTULA",
+      "prix_eur": 169.99,
+      "url": "https://www.vente-unique.com/p/meuble-tv-avec-3-portes-et-1-niche-blanc-et-naturel-lotula",
+      "image": "https://www.vente-unique.com/thumbnails/product/1810/1810327/large/0/66914207.jpg"
+    },
+    {
+      "nom": "Ensemble 90 x 190 cm sommier coffre naturel clair + matelas mousse et coutil bambou ép.15cm - KANANI de NATUREA",
+      "prix_eur": 349.99,
+      "url": "https://www.vente-unique.com/p/ensemble-90-x-190-cm-sommier-coffre-blanc-matelas-mousse-et-coutil-bambou-ep-15cm-kanani-de-naturea",
+      "image": "https://www.vente-unique.com/thumbnails/product/2918/2918637/large/0/34030139.jpg"
+    },
+    {
+      "nom": "Canapé 3 places convertible en tissu INIZOR - Anthracite",
+      "prix_eur": 349.99,
+      "url": "https://www.vente-unique.com/p/canape-3-places-convertible-en-tissu-inizor-turquoise",
+      "image": "https://www.vente-unique.com/thumbnails/product/118/118549/large/0/62884022.jpg"
+    },
+    {
+      "nom": "Table à manger 2 personnes en MDF et hêtre - Blanc - ROLENA",
+      "prix_eur": 69.99,
+      "url": "https://www.vente-unique.com/p/table-a-manger-2-couverts-en-mdf-et-hetre-blanc-rolena",
+      "image": "https://cdn1.vente-unique.com/thumbnails/product/140/140261/large/0/67000938.jpg"
+    },
+    {
+      "nom": "Dressing extensible - L110/140 cm - Blanc - BELVANA",
+      "prix_eur": 94.99,
+      "url": "https://www.vente-unique.com/p/belvana-dressing-extensible-l110-140-cm-blanc-belvana",
+      "image": "https://cdn1.vente-unique.com/thumbnails/product/3773/3773166/large/0/67055368.jpg"
+    },
+    {
+      "nom": "Armoire ODILON - 4 portes & 2 tiroirs - L.120 cm - Blanc",
+      "prix_eur": 209.99,
+      "url": "https://www.vente-unique.com/p/armoire-odilon-4-portes-2-tiroirs-l-120-cm-blanc",
+      "image": "https://cdn1.vente-unique.com/thumbnails/product/107/107825/large/0/65909725.jpg"
+    },
+    {
+      "nom": "Armoire 2 portes 2 tiroirs et 6 étagères - L100 cm - Blanc et doré - GRIMORI",
+      "prix_eur": 199.99,
+      "url": "https://www.vente-unique.com/p/grimori-armoire-2-portes-2-tiroirs-et-6-etageres-l100-cm-blanc-et-dore-grimori",
+      "image": "https://cdn1.vente-unique.com/thumbnails/product/3768/3768217/large/0/57093739.jpg"
+    },
+    {
+      "nom": "Armoire 2 portes - L81 cm - Blanc - LISTOWEL",
+      "prix_eur": 159.99,
+      "url": "https://www.vente-unique.com/p/armoire-2-portes-l81-cm-blanc-listowel",
+      "image": "https://cdn1.vente-unique.com/thumbnails/product/1725/1725569/large/0/65909750.jpg"
+    },
+    {
+      "nom": "Commode 3 tiroirs avec armoire et miroir - Blanc et naturel - VITORIO",
+      "prix_eur": 219.99,
+      "url": "https://www.vente-unique.com/p/commode-3-tiroirs-avec-armoire-et-miroir-blanc-vitorio",
+      "image": "https://www.vente-unique.com/thumbnails/product/623/623879/large/0/68203283.jpg"
+    },
+    {
+      "nom": "Lot de 2 chaises JODY - Polypropylène et Hêtre - Blanc",
+      "prix_eur": 69.99,
+      "url": "https://www.vente-unique.com/p/lot-de-2-chaises-jody-polypropylene-simili-et-hetre-noir",
+      "image": "https://www.vente-unique.com/thumbnails/product/108/108035/large/0/70994666.jpg"
+    }
+  ]
+}

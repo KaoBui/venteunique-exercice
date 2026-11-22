@@ -43,11 +43,11 @@ const srStatus = { done: '(réglé)', active: '(affiché)', todo: '(à choisir)'
   text-align: left;
 }
 .row:hover:not(.row--active) {
-  background: var(--color-surface-subtle);
+  background: var(--surface-subtle);
 }
 .row--active {
-  background: var(--color-surface-subtle);
-  border-left: 2px solid var(--color-border-selected);
+  background: var(--surface-subtle);
+  border-left: 2px solid var(--border-selected);
   padding-left: calc(var(--space-3) - 2px);
 }
 .row__status {
@@ -60,10 +60,10 @@ const srStatus = { done: '(réglé)', active: '(affiché)', todo: '(à choisir)'
   border-radius: 10px;
 }
 .row--todo .row__status {
-  border: 1.5px solid var(--color-border-default);
+  border: 1.5px solid var(--border-default);
 }
 .row--done .row__status {
-  background: var(--color-status-success);
+  background: var(--feedback-success);
 }
 .row__text {
   flex: 1;
@@ -75,7 +75,7 @@ const srStatus = { done: '(réglé)', active: '(affiché)', todo: '(à choisir)'
 .row__label {
   font-size: 14px;
   line-height: 20px;
-  color: var(--color-text-strong);
+  color: var(--text-strong);
 }
 .row--active .row__label {
   font-weight: 500;
@@ -83,12 +83,12 @@ const srStatus = { done: '(réglé)', active: '(affiché)', todo: '(à choisir)'
 .row__detail {
   font-size: 12px;
   line-height: 16px;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .row--done .row__detail {
-  color: var(--color-text-default);
+  color: var(--text-default);
 }
 </style>

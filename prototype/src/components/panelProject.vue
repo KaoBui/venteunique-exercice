@@ -1,8 +1,8 @@
 <script setup>
-import UiChip from './UiChip.vue'
-import UiButton from './UiButton.vue'
-import PosteRow from './PosteRow.vue'
-import BudgetTracker from './BudgetTracker.vue'
+import chipOption from './chipOption.vue'
+import buttonMain from './buttonMain.vue'
+import listPosteItem from './listPosteItem.vue'
+import budgetTracker from './budgetTracker.vue'
 import { PROMO } from '../data/catalog.js'
 import { euros, price } from '../composables/format.js'
 import { useProject } from '../composables/useProject.js'
@@ -58,8 +58,8 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
     </div>
 
     <div class="recap">
-      <UiChip as="span">{{ housingLabel }}</UiChip>
-      <UiChip as="span">{{ budget ? `${euros(budget)} max` : 'Budget libre' }}</UiChip>
+      <chipOption as="span">{{ housingLabel }}</chipOption>
+      <chipOption as="span">{{ budget ? `${euros(budget)} max` : 'Budget libre' }}</chipOption>
       <button type="button" class="link link--s" @click="edit">Modifier</button>
     </div>
 
@@ -85,7 +85,7 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
           />
         </button>
         <div v-show="state.openGroups.includes(g.id)" class="group__rows">
-          <PosteRow
+          <listPosteItem
             v-for="p in g.postes"
             :key="p.id"
             :label="p.label"
@@ -104,7 +104,7 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
 
     <hr class="sep" />
 
-    <BudgetTracker
+    <budgetTracker
       :budget="budget"
       :spent="spent"
       :shipping-estimate="shippingEstimate"
@@ -115,7 +115,7 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
     />
 
     <div class="foot">
-      <UiButton block @click="emit('open-cart')">Voir mon panier</UiButton>
+      <buttonMain block @click="emit('open-cart')">Voir mon panier</buttonMain>
       <button type="button" class="link link--s" @click="emit('explain')">Comment sont calculés les repères ?</button>
     </div>
   </aside>
@@ -143,11 +143,11 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--color-border-default);
+  border: 1px solid var(--border-default);
   border-radius: 18px;
 }
 .icon-btn:hover {
-  border-color: var(--color-text-strong);
+  border-color: var(--text-strong);
 }
 .recap {
   display: flex;
@@ -160,7 +160,7 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
   height: 1px;
   margin: 0;
   border: 0;
-  background: var(--color-border-subtle);
+  background: var(--border-subtle);
 }
 .groups {
   display: flex;

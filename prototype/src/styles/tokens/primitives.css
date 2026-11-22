@@ -1,0 +1,28 @@
+/*
+ * Layer 1 — primitives: raw values, no meaning.
+ * Components NEVER read these directly (checked by scripts/check-ds.mjs).
+ * Naming follows Minos: --primitive-<family>-<modifier>-<step>.
+ * "squid" is the near-black family shown in the Minos case study; the other family names are ours.
+ * Values were measured on vente-unique.com (2026-11-21).
+ */
+:root {
+  /* Squid: near-black, used opaque and with opacity */
+  --primitive-squid-opacity-950: #130c0c;
+  --primitive-squid-opacity-800: rgba(23, 13, 14, 0.8);
+  --primitive-squid-opacity-600: rgba(31, 20, 21, 0.61);
+  --primitive-squid-opacity-500: rgba(86, 67, 69, 0.5);
+  --primitive-squid-opacity-400: rgba(19, 12, 12, 0.4);
+  --primitive-squid-opacity-300: rgba(184, 168, 171, 0.32);
+  --primitive-squid-opacity-200: rgba(209, 199, 201, 0.2);
+  --primitive-squid-opacity-100: rgba(197, 185, 187, 0.14);
+
+  --primitive-white: #ffffff;
+  --primitive-black: #000000;
+  --primitive-grey-100: #f5f5f5;
+  --primitive-sand-100: #f3ece2;
+
+  --primitive-red-600: #ec002e;
+  --primitive-green-700: #008554;
+  --primitive-orange-700: #bd4800;
+  --primitive-orange-50: #fff1eb;
+}

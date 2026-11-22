@@ -1,6 +1,6 @@
 <script setup>
 /**
- * BudgetTracker — budget gauge for « Mon projet d'aménagement ».
+ * budgetTracker — budget gauge for « Mon projet d'aménagement ».
  * Dark segment = products, grey segment = estimated delivery, vertical mark = promo threshold
  * (computed on Vente-unique products only). States: empty, in progress, threshold reached,
  * over budget, guardrail (threshold above the budget → mark and promo message hidden).
@@ -117,20 +117,23 @@ function onCompactClick(e) {
       <span v-if="showPromo" class="bt__threshold" :style="{ left: thresholdLeft }" aria-hidden="true" />
     </div>
 
-    <p v-if="over" class="bt__msg bt__msg--danger" role="status">
-      <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
-        <circle cx="8" cy="8" r="7" fill="currentColor" />
-        <path d="M8 4.2v4.6M8 11.1v.4" stroke="#fff" stroke-width="1.75" stroke-linecap="round" />
-      </svg>
-      Budget dépassé de {{ euros(overBy) }}
-    </p>
-    <p v-else-if="promoReached" class="bt__msg bt__msg--success" role="status">
-      <img src="/icons/check-success.svg" width="14" height="14" alt="" />
-      {{ promoLabel }} débloqués sur vos produits
-    </p>
-    <p v-else-if="showPromo && spent > 0" class="bt__msg bt__msg--promo">
-      Plus que {{ euros(promoGap) }} pour {{ promoLabel }}
-    </p>
+    <!-- Message slot: a brand or context can replace the wording without a new variant -->
+    <slot name="message" :over="over" :over-by="overBy" :promo-reached="promoReached" :promo-gap="promoGap">
+      <p v-if="over" class="bt__msg bt__msg--danger" role="status">
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" fill="currentColor" />
+          <path d="M8 4.2v4.6M8 11.1v.4" class="bt__icon-mark" stroke-width="1.75" stroke-linecap="round" />
+        </svg>
+        Budget dépassé de {{ euros(overBy) }}
+      </p>
+      <p v-else-if="promoReached" class="bt__msg bt__msg--success" role="status">
+        <img src="/icons/check-success.svg" width="14" height="14" alt="" />
+        {{ promoLabel }} débloqués sur vos produits
+      </p>
+      <p v-else-if="showPromo && spent > 0" class="bt__msg bt__msg--promo">
+        Plus que {{ euros(promoGap) }} pour {{ promoLabel }}
+      </p>
+    </slot>
   </section>
 </template>
 
@@ -151,13 +154,13 @@ function onCompactClick(e) {
   font-size: 16px;
   line-height: 24px;
   font-weight: 500;
-  color: var(--color-text-strong);
+  color: var(--text-strong);
   white-space: nowrap;
 }
 .bt__caption {
   font-size: 12px;
   line-height: 16px;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 .bt__gauge {
@@ -172,7 +175,7 @@ function onCompactClick(e) {
   height: 8px;
   overflow: hidden;
   border-radius: var(--radius-pill);
-  background: var(--color-surface-muted);
+  background: var(--meter-track);
 }
 .bt__products,
 .bt__shipping {
@@ -183,13 +186,13 @@ function onCompactClick(e) {
 }
 .bt__products {
   left: 0;
-  background: var(--color-action-primary);
+  background: var(--meter-fill);
 }
 .bt__shipping {
-  background: var(--color-overlay-control);
+  background: var(--meter-fill-secondary);
 }
 .bt--over .bt__products {
-  background: var(--color-status-danger);
+  background: var(--meter-fill-danger);
 }
 .bt__threshold {
   position: absolute;
@@ -197,7 +200,7 @@ function onCompactClick(e) {
   width: 2px;
   height: 16px;
   margin-left: -1px;
-  background: var(--color-text-strong);
+  background: var(--meter-marker);
   transition: left 0.4s ease;
 }
 .bt__msg {
@@ -212,16 +215,19 @@ function onCompactClick(e) {
   font-weight: 500;
 }
 .bt__msg--promo {
-  background: var(--color-promo-surface);
-  color: var(--color-promo-text);
+  background: var(--feedback-promo-background);
+  color: var(--feedback-promo-text);
 }
 .bt__msg--success {
   padding-left: 0;
-  color: var(--color-status-success);
+  color: var(--feedback-success);
+}
+.bt__icon-mark {
+  stroke: var(--text-inverse);
 }
 .bt__msg--danger {
   padding-left: 0;
-  color: var(--color-status-danger);
+  color: var(--feedback-danger);
 }
 
 /* Compact */
@@ -229,10 +235,10 @@ function onCompactClick(e) {
   gap: 6px;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-m);
-  border: 1px solid var(--color-border-subtle);
+  border: 1px solid var(--border-subtle);
   text-decoration: none;
   text-align: left;
-  background: var(--color-surface-default);
+  background: var(--surface-default);
   box-shadow: var(--shadow-raised);
 }
 .bt--compact .bt__rail {

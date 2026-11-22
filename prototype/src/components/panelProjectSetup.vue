@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
-import UiChip from './UiChip.vue'
-import UiButton from './UiButton.vue'
+import chipOption from './chipOption.vue'
+import buttonMain from './buttonMain.vue'
 import { HOUSINGS, BUDGET_PRESETS } from '../data/catalog.js'
 import { euros } from '../composables/format.js'
 import { useProject } from '../composables/useProject.js'
@@ -39,14 +39,14 @@ function noBudget() {
     <fieldset class="question">
       <legend class="t-label-l">Que meublez-vous ?</legend>
       <div class="choices">
-        <UiChip
+        <chipOption
           v-for="h in HOUSINGS"
           :key="h.id"
           :selected="state.housing === h.id"
           @click="state.housing = h.id"
         >
           {{ h.label }}
-        </UiChip>
+        </chipOption>
       </div>
     </fieldset>
 
@@ -56,14 +56,14 @@ function noBudget() {
         <span class="t-caption">Facultatif</span>
       </legend>
       <div class="choices">
-        <UiChip
+        <chipOption
           v-for="amount in BUDGET_PRESETS"
           :key="amount"
           :selected="state.budgetPreset === amount"
           @click="pickPreset(amount)"
         >
           {{ euros(amount) }}
-        </UiChip>
+        </chipOption>
       </div>
       <label class="field" :class="{ 'field--filled': state.customBudget }">
         <span class="sr-only">Autre montant, en euros</span>
@@ -90,9 +90,9 @@ function noBudget() {
     </fieldset>
 
     <div class="validation">
-      <UiButton block @click="start">
+      <buttonMain block @click="start">
         {{ isReturning ? 'Mettre à jour ma liste' : 'Je découvre ma liste' }} ({{ postes.length }})
-      </UiButton>
+      </buttonMain>
       <p class="reassurance t-caption">
         <img src="/icons/check.svg" width="14" height="14" alt="" />
         Sans compte · modifiable à tout moment
@@ -119,7 +119,7 @@ function noBudget() {
   line-height: 16px;
   font-weight: 700;
   letter-spacing: 0.96px;
-  color: var(--color-brand-default);
+  color: var(--text-brand);
 }
 .question {
   display: flex;
@@ -153,13 +153,13 @@ function noBudget() {
   padding: 0 var(--space-4);
   border-radius: var(--radius-m);
   border: 2px solid transparent;
-  background: var(--color-surface-subtle);
+  background: var(--surface-subtle);
   font-size: 14px;
   line-height: 20px;
 }
 .field:focus-within,
 .field--filled {
-  border-color: var(--color-border-selected);
+  border-color: var(--border-selected);
 }
 .field__input {
   flex: 1;
@@ -167,14 +167,14 @@ function noBudget() {
   border: 0;
   outline: 0;
   background: transparent;
-  color: var(--color-text-strong);
+  color: var(--text-strong);
 }
 .field__input::placeholder {
-  color: var(--color-text-muted);
+  color: var(--text-muted);
 }
 .field__unit {
   font-weight: 500;
-  color: var(--color-text-default);
+  color: var(--text-default);
 }
 .unknown {
   align-self: flex-start;

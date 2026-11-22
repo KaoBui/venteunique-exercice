@@ -25,19 +25,19 @@ defineProps({
   align-items: center;
   gap: 6px;
   padding: var(--space-2) var(--space-3);
-  border: var(--border-width-default) solid var(--color-border-default);
+  border: var(--border-width-default) solid var(--border-default);
   border-radius: var(--radius-pill);
   font-size: 13px;
   line-height: 22px;
-  color: var(--color-text-strong);
-  background: var(--color-surface-default);
+  color: var(--text-strong);
+  background: var(--surface-default);
   white-space: nowrap;
 }
 .chip--selected {
-  border: var(--border-width-selected) solid var(--color-border-selected);
+  border: var(--border-width-selected) solid var(--border-selected);
   padding: calc(var(--space-2) - 1px) calc(var(--space-3) - 1px);
 }
 button.chip:hover:not(.chip--selected) {
-  border-color: var(--color-border-strong);
+  border-color: var(--border-strong);
 }
 </style>

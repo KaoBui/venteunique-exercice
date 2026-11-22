@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, nextTick } from 'vue'
-import UiChip from './UiChip.vue'
-import UiButton from './UiButton.vue'
-import ProductCard from './ProductCard.vue'
+import chipOption from './chipOption.vue'
+import buttonMain from './buttonMain.vue'
+import cardProductBox from './cardProductBox.vue'
 import { GROUPS } from '../data/catalog.js'
 import { euros, shortDate } from '../composables/format.js'
 import { useProject } from '../composables/useProject.js'
@@ -104,7 +104,7 @@ function resetFilters() {
         </p>
       </div>
       <div v-if="!status" class="head__actions">
-        <UiButton variant="secondary" size="small" @click="onOwned">J'ai déjà</UiButton>
+        <buttonMain variant="secondary" size="small" @click="onOwned">J'ai déjà</buttonMain>
         <button type="button" class="link link--m" @click="onSkip">Je passe</button>
       </div>
     </div>
@@ -118,18 +118,18 @@ function resetFilters() {
     </div>
 
     <div class="filters">
-      <UiChip v-if="state.priceCap" selected removable @click="state.priceCap = false">
+      <chipOption v-if="state.priceCap" selected removable @click="state.priceCap = false">
         ≤ {{ euros(poste.repere) }}<span class="sr-only">, retirer le filtre</span>
-      </UiChip>
-      <UiChip v-else @click="state.priceCap = true">+ ≤ {{ euros(poste.repere) }}</UiChip>
+      </chipOption>
+      <chipOption v-else @click="state.priceCap = true">+ ≤ {{ euros(poste.repere) }}</chipOption>
 
-      <UiChip v-if="smallHousing && state.smallSpace" selected removable @click="state.smallSpace = false">
+      <chipOption v-if="smallHousing && state.smallSpace" selected removable @click="state.smallSpace = false">
         Petit espace<span class="sr-only">, retirer le filtre</span>
-      </UiChip>
+      </chipOption>
 
-      <UiChip v-if="moveIn && !editingDate" selected removable @click="state.moveInDate = ''">
+      <chipOption v-if="moveIn && !editingDate" selected removable @click="state.moveInDate = ''">
         Livré avant le {{ shortDate(moveIn) }}<span class="sr-only">, retirer le filtre</span>
-      </UiChip>
+      </chipOption>
       <label v-else-if="editingDate" class="date-chip">
         <span class="sr-only">Date d'emménagement</span>
         <input
@@ -141,17 +141,17 @@ function resetFilters() {
           @blur="editingDate = false"
         />
       </label>
-      <UiChip v-else @click="editDate">+ Date d'emménagement</UiChip>
+      <chipOption v-else @click="editDate">+ Date d'emménagement</chipOption>
 
-      <UiChip>Tous les filtres</UiChip>
+      <chipOption>Tous les filtres</chipOption>
       <span class="spacer" />
-      <UiChip>Trier par : pertinence</UiChip>
+      <chipOption>Trier par : pertinence</chipOption>
     </div>
 
     <p class="t-caption">{{ products.length }} produits · sélection « Les Essentiels » pour ce poste</p>
 
     <div v-if="products.length" class="grid">
-      <ProductCard
+      <cardProductBox
         v-for="p in products"
         :key="p.id"
         :product="p"
@@ -166,7 +166,7 @@ function resetFilters() {
     <div v-else class="empty">
       <p class="t-label-l">Aucun produit ne correspond à ces filtres.</p>
       <p class="t-body-m">Élargissez le prix ou la date de livraison pour voir plus de choix.</p>
-      <UiButton variant="secondary" size="small" @click="resetFilters">Retirer les filtres</UiButton>
+      <buttonMain variant="secondary" size="small" @click="resetFilters">Retirer les filtres</buttonMain>
     </div>
   </main>
 </template>
@@ -183,7 +183,7 @@ function resetFilters() {
 .breadcrumb {
   font-size: 12px;
   line-height: 16px;
-  color: var(--color-text-default);
+  color: var(--text-default);
 }
 .head {
   display: flex;
@@ -201,7 +201,7 @@ function resetFilters() {
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  color: var(--color-text-muted);
+  color: var(--text-muted);
 }
 .repere {
   display: flex;
@@ -220,7 +220,7 @@ function resetFilters() {
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-m);
-  background: var(--color-surface-subtle);
+  background: var(--surface-subtle);
 }
 .settled__icon {
   width: 20px;
@@ -229,7 +229,7 @@ function resetFilters() {
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  background: var(--color-status-success);
+  background: var(--feedback-success);
 }
 .settled__text {
   flex: 1;
@@ -246,11 +246,11 @@ function resetFilters() {
 .date-chip input {
   height: 40px;
   padding: 0 var(--space-3);
-  border: 2px solid var(--color-border-selected);
+  border: 2px solid var(--border-selected);
   border-radius: var(--radius-pill);
   font-size: 13px;
-  color: var(--color-text-strong);
-  background: var(--color-surface-default);
+  color: var(--text-strong);
+  background: var(--surface-default);
 }
 .grid {
   display: grid;
@@ -264,6 +264,6 @@ function resetFilters() {
   gap: var(--space-2);
   padding: var(--space-8);
   border-radius: var(--radius-l);
-  background: var(--color-surface-subtle);
+  background: var(--surface-subtle);
 }
 </style>

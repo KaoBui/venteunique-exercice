@@ -1,14 +1,14 @@
 <script setup>
 import { ref, computed } from 'vue'
-import PromoBar from './components/PromoBar.vue'
-import SiteHeader from './components/SiteHeader.vue'
-import SetupPanel from './components/SetupPanel.vue'
-import EssentialsMain from './components/EssentialsMain.vue'
-import ProjectPanel from './components/ProjectPanel.vue'
-import PosteMain from './components/PosteMain.vue'
-import BudgetTracker from './components/BudgetTracker.vue'
-import UiDialog from './components/UiDialog.vue'
-import UiButton from './components/UiButton.vue'
+import bannerPromo from './components/bannerPromo.vue'
+import headerDesktop from './components/headerDesktop.vue'
+import panelProjectSetup from './components/panelProjectSetup.vue'
+import mainEssentials from './components/mainEssentials.vue'
+import panelProject from './components/panelProject.vue'
+import mainPoste from './components/mainPoste.vue'
+import budgetTracker from './components/budgetTracker.vue'
+import dialogMain from './components/dialogMain.vue'
+import buttonMain from './components/buttonMain.vue'
 import { PROMO } from './data/catalog.js'
 import { euros, price } from './composables/format.js'
 import { useProject } from './composables/useProject.js'
@@ -37,14 +37,14 @@ function openProject() {
 </script>
 
 <template>
-  <PromoBar />
-  <SiteHeader :cart-count="chosenProducts.length" @open-project="openProject" @open-cart="cartOpen = true" />
+  <bannerPromo />
+  <headerDesktop :cart-count="chosenProducts.length" @open-project="openProject" @open-cart="cartOpen = true" />
 
   <div class="body">
     <div v-if="!state.panelCollapsed" class="side">
       <div class="side__inner">
-        <SetupPanel v-if="state.screen === 'setup'" />
-        <ProjectPanel
+        <panelProjectSetup v-if="state.screen === 'setup'" />
+        <panelProject
           v-else
           @open-cart="cartOpen = true"
           @explain="explainOpen = true"
@@ -54,13 +54,13 @@ function openProject() {
       </div>
     </div>
 
-    <EssentialsMain v-if="state.screen === 'setup'" />
-    <PosteMain v-else @notice="showNotice" />
+    <mainEssentials v-if="state.screen === 'setup'" />
+    <mainPoste v-else @notice="showNotice" />
   </div>
 
-  <!-- Collapsed panel: the compact BudgetTracker brings the user back to the project -->
+  <!-- Collapsed panel: the compact budgetTracker brings the user back to the project -->
   <div v-if="state.panelCollapsed && state.screen === 'project'" class="floating">
-    <BudgetTracker
+    <budgetTracker
       size="compact"
       label="Ouvrir mon projet"
       :budget="budget"
@@ -78,7 +78,7 @@ function openProject() {
     </Transition>
   </div>
 
-  <UiDialog :open="cartOpen" title="Mon panier" @close="cartOpen = false">
+  <dialogMain :open="cartOpen" title="Mon panier" @close="cartOpen = false">
     <p v-if="!chosenProducts.length" class="t-body-m">
       Votre panier est vide. Choisissez un produit pour un poste de votre liste.
     </p>
@@ -100,13 +100,13 @@ function openProject() {
       <p v-if="budget" class="t-caption">
         Budget de votre projet : {{ euros(budget) }} · {{ completed }} sur {{ postes.length }} postes réglés
       </p>
-      <UiButton block @click="cartOpen = false; showNotice('Fin du prototype : le paiement n\'est pas simulé.')">
+      <buttonMain block @click="cartOpen = false; showNotice('Fin du prototype : le paiement n\'est pas simulé.')">
         Valider mon panier
-      </UiButton>
+      </buttonMain>
     </template>
-  </UiDialog>
+  </dialogMain>
 
-  <UiDialog :open="explainOpen" title="Comment sont calculés les repères ?" @close="explainOpen = false">
+  <dialogMain :open="explainOpen" title="Comment sont calculés les repères ?" @close="explainOpen = false">
     <p class="t-body-m">
       On part du prix moyen des produits « Les Essentiels » pour chaque poste, puis on répartit votre budget maximum
       au prorata. Les repères sont arrondis à 10 €.
@@ -116,7 +116,7 @@ function openProject() {
       un fauteuil. Vous pouvez régler un poste sans acheter (« J'ai déjà ») ou le passer.
     </p>
     <p class="t-caption">Prototype : les produits, prix et délais sont illustratifs.</p>
-  </UiDialog>
+  </dialogMain>
 </template>
 
 <style scoped>
@@ -129,8 +129,8 @@ function openProject() {
   flex-shrink: 0;
   width: 360px;
   align-self: stretch;
-  border-right: 1px solid var(--color-border-subtle);
-  background: var(--color-surface-default);
+  border-right: 1px solid var(--border-subtle);
+  background: var(--surface-default);
 }
 .side__inner {
   position: sticky;
@@ -156,8 +156,8 @@ function openProject() {
 .toast__msg {
   padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-pill);
-  background: var(--color-action-primary);
-  color: var(--color-text-inverse);
+  background: var(--interactive-primary-background);
+  color: var(--text-inverse);
   font-size: 14px;
   line-height: 20px;
   box-shadow: var(--shadow-raised);
@@ -188,7 +188,7 @@ function openProject() {
 .totals {
   margin: 0;
   padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border-subtle);
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -203,12 +203,12 @@ function openProject() {
   font-size: 14px;
 }
 .totals__promo {
-  color: var(--color-promo-text);
+  color: var(--feedback-promo-text);
 }
 .totals__grand dt,
 .totals__grand dd {
   font-size: 16px;
   font-weight: 600;
-  color: var(--color-text-strong);
+  color: var(--text-strong);
 }
 </style>

@@ -39,18 +39,18 @@ defineProps({
   line-height: 20px;
 }
 .btn--primary {
-  background: var(--color-action-primary);
-  color: var(--color-action-on-primary);
+  background: var(--interactive-primary-background);
+  color: var(--interactive-primary-text);
 }
 .btn--primary:hover {
-  background: #3a3030;
+  background: var(--interactive-primary-background-hover);
 }
 .btn--secondary {
-  border: 1px solid var(--color-border-default);
-  color: var(--color-text-strong);
-  background: var(--color-surface-default);
+  border: 1px solid var(--interactive-secondary-border);
+  color: var(--text-strong);
+  background: var(--surface-default);
 }
 .btn--secondary:hover {
-  border-color: var(--color-text-strong);
+  border-color: var(--interactive-secondary-border-hover);
 }
 </style>
