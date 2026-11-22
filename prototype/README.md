@@ -28,7 +28,7 @@ Component names follow Minos, Vente-unique's design system: the same camelCase n
 - `src/styles/tokens/primitives.css` → `semantic.css`: two token layers. Components read semantic roles only.
 - [DESIGN-RULES.md](DESIGN-RULES.md): the rules, for people and AI agents. `npm run check:ds` enforces them, and it runs before every build.
 - `src/composables/useProject.js`: the single store (housing, budget, repères, poste statuses).
-- `src/data/catalog.js`: illustrative postes and products.
+- `src/data/catalog.js`: postes and products. The 11 « Les Essentiels » products are real (name, price, photo and link from vente-unique.com, listed on 2026-11-22). The others fill gaps in the list and are illustrative, with no photo. Delivery costs and lead times are estimates.
 
 ## Deploy
 

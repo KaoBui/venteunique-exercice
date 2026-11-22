@@ -21,7 +21,13 @@ const filters = ['Catégorie', 'Couleur', 'Matière', 'Prix', 'Tous les filtres'
           Des meubles fonctionnels, faciles à associer et pensés pour un premier chez-soi, sans dépasser son budget.
         </p>
       </div>
-      <div class="banner__photo"><span class="t-caption">Photo d'ambiance (bandeau existant)</span></div>
+      <img
+        class="banner__photo"
+        src="/products/tg_catalog_banner_6a608c1c8e744857533338.webp"
+        alt=""
+        width="420"
+        height="180"
+      />
     </section>
 
     <div class="filters">
@@ -76,11 +82,8 @@ const filters = ['Catégorie', 'Couleur', 'Matière', 'Prix', 'Tous les filtres'
   width: 420px;
   height: 180px;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  object-fit: cover;
   border-radius: var(--radius-l);
-  background: var(--surface-muted);
 }
 .filters {
   display: flex;

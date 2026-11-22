@@ -156,7 +156,7 @@ function resetFilters() {
         :key="p.id"
         :product="p"
         project-mode
-        :delivery="deliveryDate(p)"
+        :delivery="moveIn ? deliveryDate(p) : null"
         :chosen="status?.state === 'chosen' && status.productId === p.id"
         :favorite="state.favorites.includes(p.id)"
         @choose="onChoose(p)"

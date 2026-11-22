@@ -4,7 +4,7 @@ import { price, shortDate } from '../composables/format.js'
 
 const props = defineProps({
   product: { type: Object, required: true },
-  /** Project mode: shows the delivery date and « Choisir pour ce poste » */
+  /** Project mode: « Choisir pour ce poste », plus the delivery date when one is passed (move-in date set) */
   projectMode: { type: Boolean, default: false },
   delivery: { type: Date, default: null },
   chosen: { type: Boolean, default: false },
@@ -40,7 +40,10 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
       </button>
     </div>
     <div class="card__infos">
-      <p class="card__name">{{ product.name }}</p>
+      <a v-if="product.url" :href="product.url" target="_blank" rel="noopener" class="card__name card__name--link">
+        {{ product.name }}<span class="sr-only"> (fiche produit sur vente-unique.com, nouvel onglet)</span>
+      </a>
+      <p v-else class="card__name">{{ product.name }}</p>
       <p class="card__price">{{ price(product.price) }}</p>
       <p v-if="projectMode && delivery" class="card__delivery">
         <img src="/icons/check-success.svg" width="16" height="16" alt="" />
@@ -65,6 +68,7 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
 
 <style scoped>
 .card {
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -83,8 +87,7 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
 .card__photo {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  mix-blend-mode: darken;
+  object-fit: cover;
 }
 .card__fav-on {
   color: var(--interactive-favorite-active);
@@ -112,6 +115,12 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
   line-height: 20px;
   color: var(--text-default);
 }
+.card__name--link {
+  text-decoration: none;
+}
+.card__name--link:hover {
+  text-decoration: underline;
+}
 .card__price {
   font-size: 16px;
   line-height: 24px;
@@ -128,6 +137,7 @@ const deliveryLabel = computed(() => (props.delivery ? `Livré le ${shortDate(pr
   color: var(--feedback-success);
 }
 .card__choose {
+  margin-top: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
