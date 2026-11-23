@@ -11,7 +11,7 @@ const filters = ['Catégorie', 'Couleur', 'Matière', 'Prix']
 
 <template>
   <main class="main">
-    <p class="breadcrumb">Accueil &nbsp;/&nbsp; Inspirations &amp; conseils &nbsp;/&nbsp; Mon projet d'aménagement</p>
+    <p class="breadcrumb">Accueil &nbsp;/&nbsp; Planifier mes meubles</p>
 
     <h2 class="t-display-m">Les Essentiels</h2>
 

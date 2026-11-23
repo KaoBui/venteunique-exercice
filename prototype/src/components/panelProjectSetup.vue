@@ -18,10 +18,10 @@ function setBudget(v) {
 </script>
 
 <template>
-  <aside class="panel" aria-label="Mon projet d'aménagement — configuration">
+  <aside class="panel" aria-label="Planifier mes meubles — configuration">
     <div class="intro">
       <p class="eyebrow">NOUVEAU</p>
-      <h1 class="t-display-s">Mon projet d'aménagement</h1>
+      <h1 class="t-display-s">Planifier mes meubles</h1>
       <p class="t-body-m">On prépare votre liste d'essentiels, avec votre budget suivi en direct.</p>
     </div>
 
@@ -55,7 +55,7 @@ function setBudget(v) {
 
     <div class="validation">
       <buttonMain block @click="start">
-        {{ isReturning ? 'Mettre à jour ma liste' : 'Je découvre ma liste' }} ({{ postes.length }})
+        {{ isReturning ? `Mettre à jour mes ${postes.length} essentiels` : `Voir mes ${postes.length} essentiels` }}
       </buttonMain>
       <p class="reassurance t-caption">
         <img src="/icons/check.svg" width="14" height="14" alt="" />

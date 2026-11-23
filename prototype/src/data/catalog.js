@@ -15,9 +15,9 @@ export const HOUSINGS = [
 // in the middle of the range; the scale runs from 500 to 5 000 €.
 export const BUDGET_SCALE = { min: 500, max: 5000 }
 export const BUDGET_RANGES = {
-  studio: { min: 800, max: 1200, start: 1000, label: 'un studio' },
-  t2: { min: 1500, max: 2500, start: 2000, label: 'un appartement T2 et +' },
-  coloc: { min: 500, max: 800, start: 650, label: 'une chambre en colocation' },
+  studio: { min: 800, max: 1200, start: 1000 },
+  t2: { min: 1500, max: 2500, start: 2000 },
+  coloc: { min: 500, max: 800, start: 650 },
 }
 
 // Site-wide promo (same as the promo bar): -11% from 500 € of Vente-unique products.
@@ -33,16 +33,19 @@ export const GROUPS = [
 
 // `base` = reference amount for a 1 500 € budget, set from the real « Les Essentiels » prices.
 // The repères scale with the budget (see useProject.js).
+// `minBudget` = the poste joins the list from this budget: more budget, more essentials
+// (studio: 3 at 500 €, 6 at 800 €, 8 at 1 000 €, 9 from 1 800 €). Without a budget, the list
+// uses the housing's suggested starting budget.
 export const POSTES = [
-  { id: 'lit', group: 'dormir', label: 'Lit et matelas', base: 350, housings: ['studio', 't2', 'coloc'] },
-  { id: 'chevet', group: 'dormir', label: 'Table de chevet', base: 50, housings: ['studio', 't2', 'coloc'] },
-  { id: 'vetements', group: 'ranger', label: 'Rangement des vêtements', base: 200, housings: ['studio', 't2', 'coloc'] },
-  { id: 'appoint', group: 'ranger', label: "Rangement d'appoint", base: 60, housings: ['studio', 't2', 'coloc'] },
-  { id: 'table', group: 'manger', label: 'Table et chaises', base: 140, housings: ['studio', 't2'] },
-  { id: 'canape', group: 'detendre', label: 'Canapé', base: 350, housings: ['studio', 't2'] },
-  { id: 'meubletv', group: 'detendre', label: 'Meuble TV', base: 170, housings: ['studio', 't2'] },
-  { id: 'fauteuil', group: 'detendre', label: "Fauteuil d'appoint", base: 150, housings: ['t2'] },
-  { id: 'bureau', group: 'travailler', label: 'Bureau', base: 150, housings: ['studio', 't2', 'coloc'] },
+  { id: 'lit', group: 'dormir', label: 'Lit et matelas', base: 350, minBudget: 0, housings: ['studio', 't2', 'coloc'] },
+  { id: 'chevet', group: 'dormir', label: 'Table de chevet', base: 50, minBudget: 700, housings: ['studio', 't2', 'coloc'] },
+  { id: 'vetements', group: 'ranger', label: 'Rangement des vêtements', base: 200, minBudget: 0, housings: ['studio', 't2', 'coloc'] },
+  { id: 'appoint', group: 'ranger', label: "Rangement d'appoint", base: 60, minBudget: 800, housings: ['studio', 't2', 'coloc'] },
+  { id: 'table', group: 'manger', label: 'Table et chaises', base: 140, minBudget: 0, housings: ['studio', 't2'] },
+  { id: 'canape', group: 'detendre', label: 'Canapé', base: 350, minBudget: 900, housings: ['studio', 't2'] },
+  { id: 'meubletv', group: 'detendre', label: 'Meuble TV', base: 170, minBudget: 1000, housings: ['studio', 't2'] },
+  { id: 'fauteuil', group: 'detendre', label: "Fauteuil d'appoint", base: 150, minBudget: 1800, housings: ['studio', 't2'] },
+  { id: 'bureau', group: 'travailler', label: 'Bureau', base: 150, minBudget: 600, housings: ['studio', 't2', 'coloc'] },
 ]
 
 const VU = 'https://www.vente-unique.com/p/'

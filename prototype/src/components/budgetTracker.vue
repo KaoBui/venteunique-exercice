@@ -1,8 +1,8 @@
 <script setup>
 /**
- * budgetTracker — budget gauge for « Mon projet d'aménagement » (Figma: budgetTracker, same props).
- * Dark segment = products, grey segment = estimated delivery, vertical mark = promo threshold
- * (computed on Vente-unique products only). The promo message sits above the gauge, centred on the mark.
+ * budgetTracker — budget gauge for « Planifier mes meubles » (Figma: budgetTracker, same props).
+ * Fill = products only, vertical mark = promo threshold (computed on Vente-unique products only).
+ * Estimated delivery is left out of the gauge and the total: it is mentioned below as an extra. The promo message sits above the gauge, centred on the mark.
  * States (computed, not a prop): empty, inProgress, promoReached, over, guardrail
  * (threshold above the budget → mark and promo message hidden).
  * The state is never carried by colour alone (icon + text).
@@ -15,7 +15,7 @@ const props = defineProps({
   budget: { type: Number, default: null },
   /** Products amount in € (delivery excluded). */
   spent: { type: Number, required: true },
-  /** Estimated delivery in €, added to the total and shown apart. */
+  /** Estimated delivery in €. Not counted in the gauge or the total, mentioned below as an extra. */
   shippingEstimate: { type: Number, default: 0 },
   /** Number of essentials settled (chosen, already owned or skipped). */
   completed: { type: Number, default: null },
@@ -32,9 +32,8 @@ const props = defineProps({
 const emit = defineEmits(['open'])
 
 const hasBudget = computed(() => props.budget > 0)
-const grandTotal = computed(() => props.spent + props.shippingEstimate)
-const over = computed(() => hasBudget.value && grandTotal.value > props.budget)
-const overBy = computed(() => grandTotal.value - props.budget)
+const over = computed(() => hasBudget.value && props.spent > props.budget)
+const overBy = computed(() => props.spent - props.budget)
 const eligible = computed(() => props.promoEligibleAmount ?? props.spent)
 
 // Guardrail: a promo is only pushed when it stays inside the budget.
@@ -52,27 +51,22 @@ const promoText = computed(() => {
 const ratio = (n) => Math.min(1, Math.max(0, n / props.budget))
 const pct = (n) => `${ratio(n) * 100}%`
 const productsWidth = computed(() => (over.value ? '100%' : pct(props.spent)))
-const shippingLeft = computed(() => pct(props.spent))
-const shippingWidth = computed(() => {
-  const left = Math.min(props.spent, props.budget)
-  return pct(Math.min(props.shippingEstimate, props.budget - left))
-})
 const thresholdLeft = computed(() => pct(props.promoThreshold))
-const miniWidth = computed(() => (over.value ? '100%' : pct(grandTotal.value)))
+const miniWidth = computed(() => (over.value ? '100%' : pct(props.spent)))
 
 const progress = computed(() =>
   props.total ? `${props.completed ?? 0} sur ${props.total} réglé${props.completed > 1 ? 's' : ''}` : '',
 )
 const amounts = computed(() =>
   hasBudget.value
-    ? `${euros(grandTotal.value).replace(' €', '')} / ${euros(props.budget)}`
-    : euros(grandTotal.value),
+    ? `${euros(props.spent).replace(' €', '')} / ${euros(props.budget)}`
+    : euros(props.spent),
 )
 const valueText = computed(() => {
   const parts = [
-    hasBudget.value ? `${euros(grandTotal.value)} sur ${euros(props.budget)}` : `${euros(grandTotal.value)} dépensés`,
+    hasBudget.value ? `${euros(props.spent)} sur ${euros(props.budget)}` : `${euros(props.spent)} dépensés`,
   ]
-  if (props.shippingEstimate) parts.push(`dont ${euros(props.shippingEstimate)} de livraison estimée`)
+  if (props.shippingEstimate) parts.push(`plus ${euros(props.shippingEstimate)} de livraison estimée, non incluse`)
   if (over.value) parts.push(`budget dépassé de ${euros(overBy.value)}`)
   return parts.join(', ')
 })
@@ -161,24 +155,23 @@ function onCompactClick(e) {
       role="meter"
       aria-valuemin="0"
       :aria-valuemax="budget"
-      :aria-valuenow="Math.min(Math.round(grandTotal), budget)"
+      :aria-valuenow="Math.min(Math.round(spent), budget)"
       :aria-valuetext="valueText"
       :aria-label="label"
     >
       <span class="bt__rail">
         <span class="bt__products" :style="{ width: productsWidth }" />
-        <span v-if="!over" class="bt__shipping" :style="{ left: shippingLeft, width: shippingWidth }" />
       </span>
       <span v-if="showPromo" class="bt__threshold" :style="{ left: thresholdLeft }" aria-hidden="true" />
     </div>
 
     <div class="bt__line">
-      <p class="bt__total">{{ hasBudget ? euros(grandTotal) : `${euros(grandTotal)} dépensés` }}</p>
+      <p class="bt__total">{{ hasBudget ? euros(spent) : `${euros(spent)} dépensés` }}</p>
       <span class="bt__spacer" />
       <p v-if="hasBudget" class="bt__caption">{{ euros(budget) }}</p>
     </div>
 
-    <p v-if="shippingEstimate" class="bt__caption">dont {{ euros(shippingEstimate) }} de livraison estimée</p>
+    <p v-if="shippingEstimate" class="bt__caption">+ {{ euros(shippingEstimate) }} de livraison estimée, non incluse</p>
     <p v-else-if="spent === 0" class="bt__caption">Ajoutez un essentiel pour suivre votre budget.</p>
 
     <p v-if="over" class="bt__danger" role="status">
@@ -269,19 +262,13 @@ function onCompactClick(e) {
   border-radius: var(--radius-pill);
   background: var(--meter-track);
 }
-.bt__products,
-.bt__shipping {
+.bt__products {
   position: absolute;
   top: 0;
-  height: 8px;
-  transition: width 0.4s ease, left 0.4s ease;
-}
-.bt__products {
   left: 0;
+  height: 8px;
   background: var(--meter-fill);
-}
-.bt__shipping {
-  background: var(--meter-fill-secondary);
+  transition: width 0.4s ease;
 }
 .bt--over .bt__products {
   background: var(--meter-fill-danger);

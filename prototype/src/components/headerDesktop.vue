@@ -38,7 +38,7 @@ const navAfter = ['Corner Prestige', 'Espace Pro']
       <span class="nav-sep" aria-hidden="true" />
       <a v-for="item in navBefore" :key="item" href="#" class="nav-item" @click.prevent>{{ item }}</a>
       <a href="#" class="nav-item nav-item--active" aria-current="page" @click.prevent="$emit('open-project')">
-        Mon projet d'aménagement
+        Planifier mes meubles
       </a>
       <a v-for="item in navAfter" :key="item" href="#" class="nav-item" @click.prevent>{{ item }}</a>
     </nav>

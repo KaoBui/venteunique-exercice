@@ -48,7 +48,7 @@ Chaque critère est noté de 1 (faible) à 3 (fort). Pour la faisabilité, 3 sig
    - Les compléments arrivent au bon moment, avec le panneau « Produits complémentaires » qui existe déjà : un matelas compatible après le choix du lit.
    - Quand une date est renseignée, chaque produit choisi affiche « ✓ Livré avant le 12 déc. ». Le site exprime aujourd'hui les délais en durée (« sous 5 à 6 semaines ») : la date est calculée à partir de ce délai. En MVP, le filtre de disponibilité existant (sous 2 ou 4 semaines) suffit ; la date exacte est une évolution.
 4. **Le `BudgetTracker`, présent tout au long du parcours**
-   - Montant dépensé sur le budget, **livraison estimée comprise**, et progression des essentiels (« 3 sur 8 réglés »). Le panier estime la livraison à « à partir de 113,99 € » pour un lit à 699,99 € : l'ignorer fausserait le budget.
+   - Montant des produits sur le budget, **livraison estimée indiquée en plus**, et progression des essentiels (« 3 sur 8 réglés »). Le panier estime la livraison à « à partir de 113,99 € » pour un lit à 699,99 € : la taire fausserait le budget, mais l'ajouter au total mélangerait un prix sûr et une estimation.
    - Distance jusqu'au prochain seuil promo (type -11 % dès 500 €), seulement s'il reste atteignable dans le budget.
    - Mensualité en paiement fractionné, avec la mention légale.
    - Alerte en cas de dépassement.
@@ -86,7 +86,7 @@ Chaque critère est noté de 1 (faible) à 3 (fort). Pour la faisabilité, 3 sig
 
 - Le seuil promo n'apparaît que s'il est inférieur ou égal au budget. La jauge aide à tenir le budget, elle ne pousse pas à le dépasser.
 - Le seuil se calcule sur le montant éligible (hors marketplace) : la jauge n'annonce jamais une remise que le panier n'obtiendra pas.
-- Le total compte la livraison estimée, signalée comme telle : le budget affiché ne doit pas être meilleur que la réalité du panier.
+- Le total et la jauge ne comptent que les produits. La livraison, estimée, est écrite juste en dessous comme un montant à ajouter (« + 63 € de livraison estimée, non incluse ») : l'utilisateur sait que le panier coûtera un peu plus, sans qu'une estimation se mêle à un prix sûr.
 - La mensualité est toujours accompagnée de la mention « Un crédit vous engage et doit être remboursé ».
 - Le rééquilibrage des repères est toujours annoncé.
 
@@ -218,16 +218,17 @@ L'étape 2/3 (« Qu'avez-vous déjà ? ») présente les postes du logement choi
 │ └────────────────────────────────┘ │
 │ DANS LE PREMIER MOIS        ⌄      │
 ├────────────────────────────────────┤
-│ 463 € sur 1 500 €    1 sur 8 réglé │
-│ dont 63 € de livraison estimée     │
-│ ━━━━━━━━━░░░░░░░░░░|░░░░░░░░░░░░░░ │
+│ 400 € sur 1 500 €    1 sur 8 réglé │
+│ + 63 € de livraison estimée,       │
+│   non incluse                      │
+│ ━━━━━━━━░░░░░░░░░░░|░░░░░░░░░░░░░░ │
 │ Plus que 100 € pour -11%           │
-│ ou 3 x 154,33 € avec Alma*         │
+│ ou 3 x 133,33 € avec Alma*         │
 │ [        Voir mon panier         ] │
 └────────────────────────────────────┘
 ```
 
-Les deux autres niveaux sont repliés au départ pour garder l'écran court : on voit d'abord les essentiels. La mention légale du crédit (*) est en bas de page. Les montants sont illustratifs : le total compte la livraison estimée, le seuil promo ne compte que les produits (399,99 € + 100 € ≈ 500 €). Le produit choisi est réel : l'ensemble sommier coffre + matelas 90 x 190 cm PRESTIGE de la gamme « Les Essentiels », 399,99 € le 21 novembre 2026 ; la livraison estimée de 63 € est illustrative.
+Les deux autres niveaux sont repliés au départ pour garder l'écran court : on voit d'abord les essentiels. La mention légale du crédit (*) est en bas de page. Les montants sont illustratifs : le total et le seuil promo ne comptent que les produits, la livraison estimée est indiquée en plus (399,99 € + 100 € ≈ 500 €). Le produit choisi est réel : l'ensemble sommier coffre + matelas 90 x 190 cm PRESTIGE de la gamme « Les Essentiels », 399,99 € le 21 novembre 2026 ; la livraison estimée de 63 € est illustrative.
 
 ### W4 · Sélection filtrée d'un poste
 
@@ -355,7 +356,7 @@ L'écran à livrer dans Figma est « Ma checklist » (wireframe W3), en mobile 3
 | Retour + titre | « ‹ Retour » 13 px ; titre « Mon projet d'aménagement » Recoleta 24/32 | Style de titre éditorial du site |
 | Récap du projet | Puces « Studio », « Avant le 12 déc. », « 1 500 € » + lien « Modifier » | Puces existantes (fond `surface.subtle`, rayon 999) |
 | Groupes | Titre 14/600, puis cartes de poste (espacement 8 px) ; niveaux 2 et 3 repliés | — |
-| Barre fixée en bas | `BudgetTracker` (total livraison estimée comprise, progression « 1 sur 8 réglé ») + bouton « Voir mon panier » 48 px | Barre de total fixée du panier (`shadow.raised`) et bouton principal existants |
+| Barre fixée en bas | `BudgetTracker` (total des produits, livraison estimée indiquée en plus, progression « 1 sur 8 réglé ») + bouton « Voir mon panier » 48 px | Barre de total fixée du panier (`shadow.raised`) et bouton principal existants |
 
 ### Carte de poste : un composant, trois variantes
 

@@ -44,7 +44,6 @@
   /* Meter (budgetTracker gauge) */
   --meter-track: var(--primitive-grey-100);
   --meter-fill: var(--primitive-squid-opacity-950);
-  --meter-fill-secondary: var(--primitive-squid-opacity-600);
   --meter-fill-danger: var(--primitive-red-600);
   --meter-marker: var(--primitive-squid-opacity-950);
 

@@ -9,6 +9,8 @@ const props = defineProps({
   delivery: { type: Date, default: null },
   chosen: { type: Boolean, default: false },
   favorite: { type: Boolean, default: false },
+  /** Price at or under the poste's repère: shows « Dans votre budget » (Figma boolean « Dans votre budget ») */
+  inBudget: { type: Boolean, default: false },
 })
 defineEmits(['choose', 'toggle-favorite'])
 
@@ -72,7 +74,10 @@ const swatchNames = {
         />
         <span class="sr-only">Note : {{ String(product.rating).replace('.', ',') }} sur 5</span>
       </p>
-      <p class="card__price">{{ price(product.price) }}</p>
+      <p class="card__price-row">
+        <span class="card__price">{{ price(product.price) }}</span>
+        <span v-if="inBudget" class="card__tag">Dans votre budget</span>
+      </p>
       <p v-if="delivery" class="card__delivery">
         <img src="/icons/check-success.svg" width="16" height="16" alt="" />
         {{ deliveryLabel }}
@@ -178,11 +183,26 @@ const swatchNames = {
 .card__star--empty {
   opacity: 0.3;
 }
+.card__price-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
 .card__price {
   font-size: 16px;
   line-height: 24px;
   font-weight: 600;
   color: var(--text-strong);
+}
+/* Same pill as Figma « Tag budget »: guidance, not a filter */
+.card__tag {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--surface-editorial);
+  color: var(--text-strong);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
 }
 .card__delivery {
   display: flex;

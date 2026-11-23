@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import bannerPromo from './components/bannerPromo.vue'
 import headerDesktop from './components/headerDesktop.vue'
 import panelProjectSetup from './components/panelProjectSetup.vue'
@@ -13,7 +13,7 @@ import { PROMO } from './data/catalog.js'
 import { euros, price } from './composables/format.js'
 import { useProject } from './composables/useProject.js'
 
-const { state, budget, postes, chosenProducts, spent, shippingEstimate, completed } = useProject()
+const { state, budget, chosenProducts, spent, shippingEstimate } = useProject()
 
 const cartOpen = ref(false)
 const explainOpen = ref(false)
@@ -34,15 +34,37 @@ const cartTotal = computed(() => spent.value - discount.value + shippingEstimate
 function openProject() {
   state.panelCollapsed = false
 }
+
+// Visible height for the sticky side panel: the viewport minus what the header still
+// covers. The project panel caps itself to it, so its footer (budget + cart) never drops
+// below the fold, even at the top of the page.
+const bodyEl = ref(null)
+const panelMaxH = ref('100vh')
+let raf = 0
+function measure() {
+  raf = 0
+  const top = bodyEl.value ? Math.max(0, bodyEl.value.getBoundingClientRect().top) : 0
+  panelMaxH.value = `${window.innerHeight - top}px`
+}
+const schedule = () => raf || (raf = requestAnimationFrame(measure))
+onMounted(() => {
+  measure()
+  window.addEventListener('scroll', schedule, { passive: true })
+  window.addEventListener('resize', schedule)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', schedule)
+  window.removeEventListener('resize', schedule)
+})
 </script>
 
 <template>
   <bannerPromo />
   <headerDesktop :cart-count="chosenProducts.length" @open-project="openProject" @open-cart="cartOpen = true" />
 
-  <div class="body">
+  <div ref="bodyEl" class="body">
     <div v-if="!state.panelCollapsed" class="side">
-      <div class="side__inner">
+      <div class="side__inner" :style="{ maxHeight: panelMaxH }">
         <panelProjectSetup v-if="state.screen === 'setup'" />
         <panelProject
           v-else
@@ -66,8 +88,6 @@ function openProject() {
       :budget="budget"
       :spent="spent"
       :shipping-estimate="shippingEstimate"
-      :completed="completed"
-      :total="postes.length"
       @open="openProject"
     />
   </div>
@@ -98,7 +118,7 @@ function openProject() {
         <div class="totals__grand"><dt>Total</dt><dd>{{ price(cartTotal) }}</dd></div>
       </dl>
       <p v-if="budget" class="t-caption">
-        Budget de votre projet : {{ euros(budget) }} · {{ completed }} sur {{ postes.length }} postes réglés
+        Budget de votre projet : {{ euros(budget) }}
       </p>
       <buttonMain block @click="cartOpen = false; showNotice('Fin du prototype : le paiement n\'est pas simulé.')">
         Valider mon panier
@@ -113,8 +133,8 @@ function openProject() {
       Vente-unique (gamme « Les Essentiels »), au prorata et arrondis à 10 €.
     </p>
     <p class="t-body-m">
-      La liste dépend de votre logement : une chambre en colocation n'a pas besoin de canapé ni de table, un T2 ajoute
-      un fauteuil. Vous pouvez régler un poste sans acheter (« J'ai déjà ») ou le passer.
+      La liste dépend de votre logement et de votre budget : une chambre en colocation n'a pas besoin de canapé ni de
+      table, et plus le budget est grand, plus la liste s'étoffe (chevet, canapé, fauteuil…).
     </p>
     <p class="t-caption">Prototype : les produits, prix et délais sont illustratifs.</p>
   </dialogMain>
@@ -136,7 +156,7 @@ function openProject() {
 .side__inner {
   position: sticky;
   top: 0;
-  max-height: 100vh;
+  max-height: 100vh; /* refined inline: visible height under the header */
   overflow-y: auto;
 }
 .floating {

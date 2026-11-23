@@ -11,10 +11,10 @@ const state = reactive({
   budgetUnknown: false, // « Je ne sais pas encore »
   activeId: null,
   openGroups: [],
-  statuses: {}, // posteId → { state: 'chosen' | 'owned' | 'skipped', productId? }
+  statuses: {}, // posteId → { state: 'chosen', productId }
   favorites: [],
   moveInDate: '', // 'YYYY-MM-DD' or ''
-  priceCap: true, // « ≤ repère » filter
+  priceCap: false, // « ≤ repère » filter: optional, off by default (no dead ends at small budgets)
   smallSpace: true, // « Petit espace » filter (illustrative)
   panelCollapsed: false,
 })
@@ -32,9 +32,11 @@ function setHousing(id) {
 
 const housingLabel = computed(() => HOUSINGS.find((h) => h.id === state.housing)?.label)
 
-// The list depends on the housing type; the repères are computed here, « in the back ».
+// The list depends on the housing type and the budget (more budget, more postes);
+// the repères are computed here, « in the back ».
 const postes = computed(() => {
-  const list = POSTES.filter((p) => p.housings.includes(state.housing))
+  const ref = budget.value ?? BUDGET_RANGES[state.housing].start
+  const list = POSTES.filter((p) => p.housings.includes(state.housing) && p.minBudget <= ref)
   const baseSum = list.reduce((s, p) => s + p.base, 0)
   const factor = budget.value ? budget.value / baseSum : 1
   return list.map((p) => ({ ...p, repere: roundTo10(p.base * factor) }))
@@ -61,7 +63,6 @@ const chosenProducts = computed(() =>
 
 const spent = computed(() => chosenProducts.value.reduce((s, p) => s + p.price, 0))
 const shippingEstimate = computed(() => chosenProducts.value.reduce((s, p) => s + p.shipping, 0))
-const completed = computed(() => postes.value.filter((p) => isResolved(p.id)).length)
 
 /** Amount chosen in a need group, and the sum of its postes' repères (« Budget conseillé : 60 / 260 € ») */
 function spentIn(group) {
@@ -83,21 +84,22 @@ function productsFor(posteId) {
   let list = PRODUCTS.filter((p) => p.poste === posteId)
   if (state.priceCap && poste) list = list.filter((p) => p.price <= poste.repere)
   if (moveIn.value) list = list.filter((p) => deliveryDate(p) <= moveIn.value)
-  return list
+  // Every product stays visible, cheapest first; the repère is a guide (« Dans votre budget »), not a cap.
+  return [...list].sort((a, b) => a.price - b.price)
 }
 
 function groupOf(posteId) {
   return postes.value.find((p) => p.id === posteId)?.group
 }
 
+// Accordion: one need group open at a time (keeps the panel short on laptop screens).
 function openGroup(groupId) {
-  if (groupId && !state.openGroups.includes(groupId)) state.openGroups.push(groupId)
+  if (groupId) state.openGroups = [groupId]
 }
 
 function setActive(posteId) {
   state.activeId = posteId
   openGroup(groupOf(posteId))
-  state.priceCap = true
 }
 
 function nextTodoAfter(posteId) {
@@ -118,9 +120,10 @@ function resolveActive(status) {
 }
 
 function start() {
-  // Keep progress when the user only edits the housing or budget, but drop
-  // postes that no longer exist for the new housing.
-  const ids = postes.value.map((p) => p.id)
+  // Keep progress when the user edits the housing or budget, but drop postes that no longer
+  // exist for the new housing. Postes hidden by a lower budget keep their status: they come
+  // back as they were if the budget goes up again.
+  const ids = POSTES.filter((p) => p.housings.includes(state.housing)).map((p) => p.id)
   for (const key of Object.keys(state.statuses)) if (!ids.includes(key)) delete state.statuses[key]
   state.openGroups = []
   state.screen = 'project'
@@ -136,23 +139,13 @@ function choose(product) {
   resolveActive({ state: 'chosen', productId: product.id })
 }
 
-function markOwned() {
-  resolveActive({ state: 'owned' })
-}
-
-function skip() {
-  resolveActive({ state: 'skipped' })
-}
-
 function reopen(posteId) {
   delete state.statuses[posteId]
   setActive(posteId)
 }
 
 function toggleGroup(groupId) {
-  const i = state.openGroups.indexOf(groupId)
-  if (i === -1) state.openGroups.push(groupId)
-  else state.openGroups.splice(i, 1)
+  state.openGroups = state.openGroups.includes(groupId) ? [] : [groupId]
 }
 
 function toggleFavorite(productId) {
@@ -172,7 +165,6 @@ export function useProject() {
     chosenProducts,
     spent,
     shippingEstimate,
-    completed,
     spentIn,
     repereOf,
     setHousing,
@@ -184,8 +176,6 @@ export function useProject() {
     start,
     edit,
     choose,
-    markOwned,
-    skip,
     reopen,
     setActive,
     toggleGroup,

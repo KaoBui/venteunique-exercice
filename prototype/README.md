@@ -1,6 +1,6 @@
-# Mon projet d'aménagement — interactive prototype
+# Planifier mes meubles — interactive prototype
 
-Desktop prototype (1440) of the « Mon projet d'aménagement » flow for the Vente-unique UX/UI exercise.
+Desktop prototype (1440) of the « Planifier mes meubles » flow for the Vente-unique UX/UI exercise.
 Screens come from the Figma page « Écrans »: **A — Première visite** and **C — Projet en cours, groupes par besoin**.
 
 ## Run
@@ -15,9 +15,9 @@ npm run build    # rules check + static build in dist/
 ## What you can try
 
 - **A**: pick a housing type and a max budget (or « Autre montant », or « Je ne sais pas encore »). The list size changes with the housing (studio 8, T2 9, colocation 5).
-- **C**: click a poste in the side panel to filter the product list. « Choisir pour ce poste » adds to the cart, settles the poste and moves to the next one. « J'ai déjà » and « Je passe » settle it without buying; « Changer d'avis » reopens it.
+- **C**: click a poste in the side panel to filter the product list. « Choisir pour ce poste » adds to the cart and moves to the next poste; « Changer d'avis » reopens it. Only the budget is tracked, not the number of postes done.
 - The `budgetTracker` updates live: products + estimated delivery, promo threshold (-11% from 500 €, hidden if above the budget), over-budget warning.
-- Filters: price ≤ repère, move-in date (hides products delivered too late).
+- Products: all shown, cheapest first; « Dans votre budget » tags those at or under the repère. Optional filters: price ≤ repère (off by default), move-in date (hides products delivered too late).
 - Collapse the panel: the compact `budgetTracker` stays on screen and reopens it.
 
 ## Structure

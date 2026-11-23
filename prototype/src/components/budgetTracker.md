@@ -3,7 +3,7 @@
 **Figma:** `budgetTracker` (page Composants) · **Vue:** `budgetTracker.vue` · same name, same tokens.
 
 ## Role
-Shows what the project costs against the user's maximum budget, delivery included. It also shows how many essentials are settled and how far the user is from the site-wide promo threshold. In compact size, it brings the user back to the project.
+Shows what the products in the project cost against the user's maximum budget. Delivery is only an estimate, so it is left out of the gauge and the total and mentioned below as an extra to add. It also shows how many essentials are settled and how far the user is from the site-wide promo threshold. In compact size, it brings the user back to the project.
 
 ## Anatomy
 1. **Title**: `Mon budget` (the `label` prop). Progress on the right when `total` is set: `1 sur 8 réglé`.
@@ -11,16 +11,15 @@ Shows what the project costs against the user's maximum budget, delivery include
    - distance to the promo, or `-11% dès 500 €` before the first product (`--feedback-promo-*`);
    - promo reached: check icon + `-11% débloqués` (`--feedback-success` on `--surface-muted`).
 3. **Gauge** (`role="meter"`):
-   - dark segment = products (`--meter-fill`), full red when over budget (`--meter-fill-danger`);
-   - grey segment = estimated delivery (`--meter-fill-secondary`);
+   - fill = products only (`--meter-fill`), full red when over budget (`--meter-fill-danger`);
    - vertical mark = promo threshold (`--meter-marker`).
-4. **Values**: total on the left (`523 €`, red when over), budget on the right (`1 500 €`).
-5. **Delivery line**: `dont 63 € de livraison estimée`, or `Ajoutez un essentiel pour suivre votre budget.` when empty.
+4. **Values**: products total on the left (`400 €`, red when over), budget on the right (`1 500 €`).
+5. **Delivery line**: `+ 63 € de livraison estimée, non incluse`, or `Ajoutez un essentiel pour suivre votre budget.` when empty.
 6. **Over budget**: warning icon + `Budget dépassé de X €` (`--feedback-danger`).
 
 The `#message` slot replaces the text of the promo message (2) or of the over-budget line (6).
 
-**Compact**: one line, `Mon projet · 463 / 1 500 € · 1/8`, a 48 px mini gauge and a chevron. Warning icon and red amount when over budget.
+**Compact**: one line, `Mon projet · 400 / 1 500 € · 1/8`, a 48 px mini gauge and a chevron. Warning icon and red amount when over budget.
 
 ## Props
 
@@ -28,7 +27,7 @@ The `#message` slot replaces the text of the promo message (2) or of the over-bu
 |------|------|---------|-------|
 | `budget` | `Number \| null` | `null` | Max budget in €. Leave it empty to show the total only, with no gauge. |
 | `spent` | `Number` | required | Products, delivery excluded. |
-| `shippingEstimate` | `Number` | `0` | Added to the total and shown apart. |
+| `shippingEstimate` | `Number` | `0` | Not counted in the gauge or the total. Shown below as an extra to add. |
 | `completed` / `total` | `Number` | `null` | Settled essentials (chosen, already owned, or skipped) / all essentials. A count only: the component does not need to know the list. |
 | `promoThreshold` | `Number` | `null` | E.g. `500`. |
 | `promoLabel` | `String` | `''` | E.g. `-11%`. |
@@ -45,7 +44,7 @@ The `#message` slot replaces the text of the promo message (2) or of the over-bu
 | Empty | `spent = 0` | Empty gauge, no message. |
 | In progress | below the threshold | Promo message `Plus que 100 € pour -11%`. |
 | Threshold reached | eligible amount ≥ threshold | Success message with icon. |
-| Over budget | total > budget | Danger fill, `Budget dépassé de X €` with icon, promo hidden. |
+| Over budget | products > budget | Danger fill, `Budget dépassé de X €` with icon, promo hidden. |
 | Guardrail | threshold > budget | Threshold mark and promo message hidden: the component helps the user stay within budget and never pushes them over it. |
 | No budget | `budget` empty | Total only, no meter. |
 
@@ -55,7 +54,7 @@ The `#message` slot replaces the text of the promo message (2) or of the over-bu
 - One instance per screen in default size. Compact size only when the project panel is closed.
 
 ## Accessibility
-- Default size: the gauge is `role="meter"`, with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` and an `aria-valuetext` that reads the whole sentence (total, delivery, overrun).
+- Default size: the gauge is `role="meter"`, with `aria-valuemin`, `aria-valuemax`, `aria-valuenow` and an `aria-valuetext` that reads the whole sentence (products total, delivery not included, overrun).
 - Compact size: a link or button whose accessible name sums up the state. The gauge is `aria-hidden`.
 - Messages use `role="status"`, so the change is announced when the user picks a product.
 

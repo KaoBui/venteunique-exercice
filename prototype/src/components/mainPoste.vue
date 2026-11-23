@@ -17,8 +17,6 @@ const {
   productsFor,
   deliveryDate,
   choose,
-  markOwned,
-  skip,
   reopen,
   toggleFavorite,
 } = useProject()
@@ -31,28 +29,11 @@ const smallHousing = computed(() => state.housing !== 't2')
 // Pre-applied filters: price capped at the poste's repère, small-space dimensions (studio, coloc)
 const priceLabel = computed(() => (state.priceCap ? `Prix : jusqu'à ${euros(poste.value.repere)}` : 'Prix'))
 
-const statusText = computed(() => {
-  const s = status.value
-  if (!s) return ''
-  if (s.state === 'chosen') return `Réglé : ${productById(s.productId).name}`
-  if (s.state === 'owned') return "Réglé : vous l'avez déjà"
-  return 'Passé pour le moment'
-})
+const statusText = computed(() => (status.value ? `Choisi : ${productById(status.value.productId).name}` : ''))
 
 function onChoose(product) {
-  const label = poste.value.label
   choose(product)
-  emit('notice', `${product.short} ajouté au panier · « ${label} » réglé`)
-}
-function onOwned() {
-  const label = poste.value.label
-  markOwned()
-  emit('notice', `« ${label} » réglé : vous l'avez déjà`)
-}
-function onSkip() {
-  const label = poste.value.label
-  skip()
-  emit('notice', `« ${label} » passé, vous pourrez y revenir`)
+  emit('notice', `${product.short} ajouté au panier`)
 }
 function resetFilters() {
   state.priceCap = false
@@ -63,17 +44,13 @@ function resetFilters() {
 <template>
   <main v-if="poste" class="main">
     <p class="breadcrumb">
-      Accueil &nbsp;/&nbsp; Inspirations &amp; conseils &nbsp;/&nbsp; Mon projet d'aménagement &nbsp;/&nbsp; {{ poste.label }}
+      Accueil &nbsp;/&nbsp; Planifier mes meubles &nbsp;/&nbsp; {{ poste.label }}
     </p>
 
     <div class="head">
       <div class="head__title">
         <p class="eyebrow">{{ groupLabel }}</p>
         <h2 class="t-display-m">{{ poste.label }}</h2>
-      </div>
-      <div v-if="!status" class="head__actions">
-        <buttonMain variant="secondary" size="small" @click="onOwned">J'ai déjà</buttonMain>
-        <button type="button" class="link link--m" @click="onSkip">Je passe</button>
       </div>
     </div>
 
@@ -102,7 +79,7 @@ function resetFilters() {
           {{ state.smallSpace ? 'Dimensions : petit espace' : 'Dimensions' }}
         </chipOption>
       </div>
-      <chipOption chevron>Trier par : pertinence</chipOption>
+      <chipOption chevron>Trier par : prix croissant</chipOption>
     </div>
 
     <p class="t-caption">{{ products.length }} produit{{ products.length > 1 ? 's' : '' }}</p>
@@ -115,6 +92,7 @@ function resetFilters() {
         project-mode
         :delivery="deliveryDate(p)"
         :chosen="status?.state === 'chosen' && status.productId === p.id"
+        :in-budget="p.price <= poste.repere"
         :favorite="state.favorites.includes(p.id)"
         @choose="onChoose(p)"
         @toggle-favorite="toggleFavorite(p.id)"
@@ -159,11 +137,6 @@ function resetFilters() {
   line-height: 16px;
   font-weight: 500;
   color: var(--text-muted);
-}
-.head__actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
 }
 .settled {
   display: flex;

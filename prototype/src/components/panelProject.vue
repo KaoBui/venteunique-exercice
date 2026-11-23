@@ -17,7 +17,6 @@ const {
   groups,
   spent,
   shippingEstimate,
-  completed,
   spentIn,
   repereOf,
   statusOf,
@@ -29,30 +28,23 @@ const {
 
 function rowStatus(poste) {
   if (poste.id === state.activeId) return 'active'
-  const s = statusOf(poste.id)
-  if (!s) return 'todo'
-  return s.state === 'chosen' ? 'chosen' : 'owned'
+  return statusOf(poste.id) ? 'chosen' : 'todo'
 }
 
 function itemsFor(poste) {
   const s = statusOf(poste.id)
-  if (s?.state !== 'chosen') return []
+  if (!s) return []
   const product = productById(s.productId)
   return [{ name: product.short, price: price(product.price) }]
-}
-
-function detailFor(poste) {
-  const s = statusOf(poste.id)
-  if (s?.state === 'owned') return "Vous l'avez déjà"
-  if (s?.state === 'skipped') return 'Passé pour le moment'
-  return ''
 }
 </script>
 
 <template>
-  <aside class="panel" aria-label="Mon projet d'aménagement">
+  <aside class="panel" aria-label="Planifier mes meubles">
+    <!-- Scrolls on its own; the budget and the cart button stay pinned below -->
+    <div class="panel__scroll">
     <div class="panel__head">
-      <h1 class="t-display-s">Mon projet d'aménagement</h1>
+      <h1 class="t-display-s">Planifier mes meubles</h1>
       <button type="button" class="icon-btn" aria-label="Réduire le panneau" @click="emit('collapse')">
         <img src="/icons/chevron-left.svg" width="18" height="18" alt="" />
       </button>
@@ -95,7 +87,6 @@ function detailFor(poste) {
             :label="p.label"
             :status="rowStatus(p)"
             :items="itemsFor(p)"
-            :detail="detailFor(p)"
             @select="setActive(p.id)"
           />
         </div>
@@ -106,29 +97,50 @@ function detailFor(poste) {
       <img src="/icons/plus.svg" width="18" height="18" alt="" />
       <span class="t-label-m">Ajouter un poste</span>
     </button>
+    </div>
 
-    <hr class="sep" />
+    <div class="panel__foot">
+      <hr class="sep" />
 
-    <budgetTracker
-      :budget="budget"
-      :spent="spent"
-      :shipping-estimate="shippingEstimate"
-      :promo-threshold="PROMO.threshold"
-      :promo-label="PROMO.label"
-    />
+      <budgetTracker
+        :budget="budget"
+        :spent="spent"
+        :shipping-estimate="shippingEstimate"
+        :promo-threshold="PROMO.threshold"
+        :promo-label="PROMO.label"
+      />
 
-    <div class="foot">
       <buttonMain block @click="emit('open-cart')">Voir mon panier</buttonMain>
     </div>
   </aside>
 </template>
 
 <style scoped>
+/* The panel never grows past the visible height (set on its parent in App.vue):
+   the list scrolls, the budget and « Voir mon panier » stay on screen. */
 .panel {
   display: flex;
   flex-direction: column;
+  max-height: inherit;
+}
+.panel__scroll {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-5);
-  padding: var(--space-6) var(--space-6) var(--space-8);
+  padding: var(--space-6) var(--space-6) var(--space-5);
+}
+.panel__foot {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: 0 var(--space-6) var(--space-8);
+  background: var(--surface-default);
 }
 .panel__head {
   display: flex;
@@ -206,10 +218,19 @@ function detailFor(poste) {
   gap: var(--space-2);
   padding-left: var(--space-1);
 }
-.foot {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
+
+/* Short laptop screens (1280 × 800 and below): tighter spacing, same type sizes */
+@media (max-height: 820px) {
+  .panel__scroll {
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6) var(--space-4);
+  }
+  .panel__foot {
+    gap: var(--space-4);
+    padding-bottom: var(--space-5);
+  }
+  .groups {
+    gap: var(--space-3);
+  }
 }
 </style>

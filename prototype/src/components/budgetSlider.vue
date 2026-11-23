@@ -67,6 +67,10 @@ const sliderValue = computed(() => Math.round(toPos(props.modelValue || range.va
       <span class="field__unit" aria-hidden="true">€</span>
     </label>
 
+    <p class="t-caption">
+      Budget conseillé : {{ euros(range.min) }} - {{ euros(range.max) }}
+    </p>
+
     <div class="slider">
       <span class="slider__tick-label" :style="{ left: pct(range.min) }" aria-hidden="true">{{ euros(range.min) }}</span>
       <span class="slider__tick-label" :style="{ left: pct(range.max) }" aria-hidden="true">{{ euros(range.max) }}</span>
@@ -91,10 +95,6 @@ const sliderValue = computed(() => Math.round(toPos(props.modelValue || range.va
       <span>{{ euros(min) }}</span>
       <span>{{ euros(max) }}</span>
     </div>
-
-    <p class="t-caption">
-      Budget conseillé pour {{ range.label }} : {{ euros(range.min) }} - {{ euros(range.max) }}
-    </p>
 
     <label class="check">
       <input
