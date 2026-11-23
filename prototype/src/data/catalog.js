@@ -11,7 +11,14 @@ export const HOUSINGS = [
   { id: 'coloc', label: 'Chambre en colocation' },
 ]
 
-export const BUDGET_PRESETS = [800, 1500, 2500]
+// budgetSlider: suggested range per housing (Figma « budgetSlider » variants). The handle starts
+// in the middle of the range; the scale runs from 500 to 5 000 €.
+export const BUDGET_SCALE = { min: 500, max: 5000 }
+export const BUDGET_RANGES = {
+  studio: { min: 800, max: 1200, start: 1000, label: 'un studio' },
+  t2: { min: 1500, max: 2500, start: 2000, label: 'un appartement T2 et +' },
+  coloc: { min: 500, max: 800, start: 650, label: 'une chambre en colocation' },
+}
 
 // Site-wide promo (same as the promo bar): -11% from 500 € of Vente-unique products.
 export const PROMO = { threshold: 500, label: '-11%', code: 'VUBF11' }
@@ -92,6 +99,42 @@ export const PRODUCTS = [
   I('fold', 'bureau', 'Bureau mural rabattable - Chêne - FOLD', 'FOLD', 89.99, 14.9, 11),
   I('corner', 'bureau', "Bureau d'angle - Noir - CORNER", 'CORNER', 129.99, 29, 13),
 ]
+
+// Card details (Figma cardProductBox): colour swatches (names of the --swatch-* tokens),
+// optional badge. Every product shows a 4.5 rating, as in the mock-ups.
+const CARD_DETAILS = {
+  kanani: { colors: ['natural', 'white'] },
+  oden: { colors: ['white'] },
+  somnia: { colors: ['white'] },
+  liam: { colors: ['white', 'oak'] },
+  niko: { colors: ['white'] },
+  alba: { colors: ['oak'] },
+  timeo: { colors: ['black'] },
+  belvana: { colors: ['white'] },
+  listowel: { colors: ['white', 'oak'] },
+  grimori: { colors: ['white', 'gold'] },
+  odilon: { colors: ['white'] },
+  vitorio: { colors: ['white', 'natural'] },
+  kubo: { colors: ['white'] },
+  tom: { colors: ['black'] },
+  lena: { colors: ['beech'] },
+  rolena: { colors: ['white', 'beech'] },
+  jody: { colors: ['white', 'beech'] },
+  duo: { colors: ['white'] },
+  inizor: { colors: ['anthracite', 'sand'], badge: 'Nouveauté' },
+  nola: { colors: [] },
+  leo: { colors: ['sand'] },
+  lotula: { colors: ['anthracite', 'walnut'] },
+  sky: { colors: ['white'] },
+  zen: { colors: ['walnut'] },
+  romy: { colors: ['white'] },
+  fjord: { colors: ['anthracite'] },
+  cloud: { colors: ['natural'] },
+  loavia: { colors: ['black', 'oak'] },
+  fold: { colors: ['oak'] },
+  corner: { colors: ['black'] },
+}
+for (const p of PRODUCTS) Object.assign(p, { rating: 4.5, colors: [], badge: null }, CARD_DETAILS[p.id])
 
 // Products shown on the « Les Essentiels » listing behind the set-up panel (screen A), as in Figma.
 export const ESSENTIALS_LISTING = ['kanani', 'inizor', 'loavia', 'lotula', 'rolena', 'belvana']

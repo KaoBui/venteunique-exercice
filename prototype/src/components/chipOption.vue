@@ -2,6 +2,8 @@
 defineProps({
   selected: { type: Boolean, default: false },
   removable: { type: Boolean, default: false },
+  /** Trailing chevron, for chips that open a filter or a sort menu (Figma: Icône + ChevronDown) */
+  chevron: { type: Boolean, default: false },
   as: { type: String, default: 'button' },
 })
 </script>
@@ -15,6 +17,7 @@ defineProps({
     :aria-pressed="as === 'button' && !removable ? selected : undefined"
   >
     <slot />
+    <img v-if="chevron" src="/icons/chevron-down.svg" width="16" height="16" alt="" class="chip__icon" />
     <span v-if="removable" class="chip__x" aria-hidden="true">×</span>
   </component>
 </template>
@@ -36,6 +39,9 @@ defineProps({
 .chip--selected {
   border: var(--border-width-selected) solid var(--border-selected);
   padding: calc(var(--space-2) - 1px) calc(var(--space-3) - 1px);
+}
+.chip__icon {
+  flex-shrink: 0;
 }
 button.chip:hover:not(.chip--selected) {
   border-color: var(--border-strong);

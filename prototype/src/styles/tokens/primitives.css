@@ -25,4 +25,15 @@
   --primitive-green-700: #008554;
   --primitive-orange-700: #bd4800;
   --primitive-orange-50: #fff1eb;
+
+  /* Product colours (catalogue data shown as swatches on product cards, not brand colours) */
+  --primitive-product-white: #f4f2ee;
+  --primitive-product-natural: #d9c3a0;
+  --primitive-product-sand: #d8cbb6;
+  --primitive-product-beech: #d1b48c;
+  --primitive-product-oak: #c49a6c;
+  --primitive-product-walnut: #b98b5e;
+  --primitive-product-gold: #c9a45c;
+  --primitive-product-anthracite: #4a4a4c;
+  --primitive-product-black: #222222;
 }

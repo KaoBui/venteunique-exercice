@@ -1,30 +1,19 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import chipOption from './chipOption.vue'
 import buttonMain from './buttonMain.vue'
-import { HOUSINGS, BUDGET_PRESETS } from '../data/catalog.js'
+import budgetSlider from './budgetSlider.vue'
+import { HOUSINGS } from '../data/catalog.js'
 import { euros } from '../composables/format.js'
 import { useProject } from '../composables/useProject.js'
 
-const { state, postes, budget, start } = useProject()
+const { state, postes, budget, start, setHousing } = useProject()
 
-const unknown = ref(false)
 const isReturning = computed(() => Object.keys(state.statuses).length > 0)
 
-function pickPreset(amount) {
-  state.budgetPreset = state.budgetPreset === amount ? null : amount
-  state.customBudget = ''
-  unknown.value = false
-}
-function onCustomInput(e) {
-  state.customBudget = e.target.value.replace(/[^\d\s]/g, '')
-  if (state.customBudget) state.budgetPreset = null
-  unknown.value = false
-}
-function noBudget() {
-  state.budgetPreset = null
-  state.customBudget = ''
-  unknown.value = true
+function setBudget(v) {
+  state.budgetValue = v
+  state.budgetTouched = true
 }
 </script>
 
@@ -33,7 +22,7 @@ function noBudget() {
     <div class="intro">
       <p class="eyebrow">NOUVEAU</p>
       <h1 class="t-display-s">Mon projet d'aménagement</h1>
-      <p class="t-body-m">Deux questions, et on prépare votre liste d'essentiels, avec votre budget suivi en direct.</p>
+      <p class="t-body-m">On prépare votre liste d'essentiels, avec votre budget suivi en direct.</p>
     </div>
 
     <fieldset class="question">
@@ -43,7 +32,7 @@ function noBudget() {
           v-for="h in HOUSINGS"
           :key="h.id"
           :selected="state.housing === h.id"
-          @click="state.housing = h.id"
+          @click="setHousing(h.id)"
         >
           {{ h.label }}
         </chipOption>
@@ -55,38 +44,13 @@ function noBudget() {
         <span class="t-label-l">Votre budget maximum ?</span>
         <span class="t-caption">Facultatif</span>
       </legend>
-      <div class="choices">
-        <chipOption
-          v-for="amount in BUDGET_PRESETS"
-          :key="amount"
-          :selected="state.budgetPreset === amount"
-          @click="pickPreset(amount)"
-        >
-          {{ euros(amount) }}
-        </chipOption>
-      </div>
-      <label class="field" :class="{ 'field--filled': state.customBudget }">
-        <span class="sr-only">Autre montant, en euros</span>
-        <input
-          :value="state.customBudget"
-          inputmode="numeric"
-          placeholder="Autre montant"
-          class="field__input"
-          @input="onCustomInput"
-        />
-        <span class="field__unit" aria-hidden="true">€</span>
-      </label>
-      <button
-        type="button"
-        class="link link--s unknown"
-        :class="{ 'unknown--on': unknown }"
-        :aria-pressed="unknown"
-        @click="noBudget"
-      >
-        <img v-if="unknown" src="/icons/check.svg" width="14" height="14" alt="" />
-        Je ne sais pas encore
-      </button>
-      <p v-if="unknown" class="t-caption">Pas de souci : on vous montre des prix conseillés, vous fixerez un budget plus tard.</p>
+      <budgetSlider
+        :model-value="state.budgetValue"
+        :unknown="state.budgetUnknown"
+        :housing="state.housing"
+        @update:model-value="setBudget"
+        @update:unknown="state.budgetUnknown = $event"
+      />
     </fieldset>
 
     <div class="validation">
@@ -144,43 +108,6 @@ function noBudget() {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-}
-.field {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  height: 48px;
-  padding: 0 var(--space-4);
-  border-radius: var(--radius-m);
-  border: 2px solid transparent;
-  background: var(--surface-subtle);
-  font-size: 14px;
-  line-height: 20px;
-}
-.field:focus-within,
-.field--filled {
-  border-color: var(--border-selected);
-}
-.field__input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: var(--text-strong);
-}
-.field__input::placeholder {
-  color: var(--text-muted);
-}
-.field__unit {
-  font-weight: 500;
-  color: var(--text-default);
-}
-.unknown {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
 }
 .validation {
   display: flex;

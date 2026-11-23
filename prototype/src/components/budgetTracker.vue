@@ -1,12 +1,13 @@
 <script setup>
 /**
- * budgetTracker — budget gauge for « Mon projet d'aménagement ».
+ * budgetTracker — budget gauge for « Mon projet d'aménagement » (Figma: budgetTracker, same props).
  * Dark segment = products, grey segment = estimated delivery, vertical mark = promo threshold
- * (computed on Vente-unique products only). States: empty, in progress, threshold reached,
- * over budget, guardrail (threshold above the budget → mark and promo message hidden).
+ * (computed on Vente-unique products only). The promo message sits above the gauge, centred on the mark.
+ * States (computed, not a prop): empty, inProgress, promoReached, over, guardrail
+ * (threshold above the budget → mark and promo message hidden).
  * The state is never carried by colour alone (icon + text).
  */
-import { computed } from 'vue'
+import { ref, computed, onMounted, onUpdated, onBeforeUnmount } from 'vue'
 import { euros } from '../composables/format.js'
 
 const props = defineProps({
@@ -25,7 +26,8 @@ const props = defineProps({
   promoEligibleAmount: { type: Number, default: null },
   size: { type: String, default: 'default', validator: (v) => ['default', 'compact'].includes(v) },
   href: { type: String, default: null },
-  label: { type: String, default: 'Budget du projet' },
+  /** Visible title (« Mon budget », or « Mon projet » in compact) and accessible name. */
+  label: { type: String, default: 'Mon budget' },
 })
 const emit = defineEmits(['open'])
 
@@ -41,29 +43,65 @@ const showPromo = computed(
 )
 const promoReached = computed(() => showPromo.value && eligible.value >= props.promoThreshold)
 const promoGap = computed(() => Math.max(1, Math.round(props.promoThreshold - eligible.value)))
+const promoText = computed(() => {
+  if (promoReached.value) return `${props.promoLabel} débloqués`
+  if (props.spent > 0) return `Plus que ${euros(promoGap.value)} pour ${props.promoLabel}`
+  return `${props.promoLabel} dès ${euros(props.promoThreshold)}`
+})
 
-const pct = (n) => `${Math.min(100, Math.max(0, (n / props.budget) * 100))}%`
-const productsWidth = computed(() => pct(props.spent))
-const shippingLeft = computed(() => productsWidth.value)
+const ratio = (n) => Math.min(1, Math.max(0, n / props.budget))
+const pct = (n) => `${ratio(n) * 100}%`
+const productsWidth = computed(() => (over.value ? '100%' : pct(props.spent)))
+const shippingLeft = computed(() => pct(props.spent))
 const shippingWidth = computed(() => {
   const left = Math.min(props.spent, props.budget)
   return pct(Math.min(props.shippingEstimate, props.budget - left))
 })
 const thresholdLeft = computed(() => pct(props.promoThreshold))
+const miniWidth = computed(() => (over.value ? '100%' : pct(grandTotal.value)))
 
-const headline = computed(() =>
-  hasBudget.value ? `${euros(grandTotal.value)} sur ${euros(props.budget)}` : `${euros(grandTotal.value)} dépensés`,
-)
 const progress = computed(() =>
   props.total ? `${props.completed ?? 0} sur ${props.total} réglé${props.completed > 1 ? 's' : ''}` : '',
 )
+const amounts = computed(() =>
+  hasBudget.value
+    ? `${euros(grandTotal.value).replace(' €', '')} / ${euros(props.budget)}`
+    : euros(grandTotal.value),
+)
 const valueText = computed(() => {
-  const parts = [headline.value]
+  const parts = [
+    hasBudget.value ? `${euros(grandTotal.value)} sur ${euros(props.budget)}` : `${euros(grandTotal.value)} dépensés`,
+  ]
   if (props.shippingEstimate) parts.push(`dont ${euros(props.shippingEstimate)} de livraison estimée`)
   if (over.value) parts.push(`budget dépassé de ${euros(overBy.value)}`)
   return parts.join(', ')
 })
-const compactName = computed(() => [props.label, valueText.value, progress.value].filter(Boolean).join(' · '))
+const compactName = computed(() =>
+  [props.label, valueText.value, progress.value].filter(Boolean).join(' · '),
+)
+
+// The promo pill is centred on the threshold mark, kept inside the component.
+const promoRow = ref(null)
+const promoPill = ref(null)
+const pillOffset = ref(0)
+function placePill() {
+  if (!promoRow.value || !promoPill.value) return
+  const w = promoRow.value.clientWidth
+  const pw = promoPill.value.offsetWidth
+  const x = hasBudget.value ? w * ratio(props.promoThreshold) : 0
+  pillOffset.value = Math.round(Math.min(Math.max(0, x - pw / 2), Math.max(0, w - pw)))
+}
+let observer
+onMounted(() => {
+  placePill()
+  observer = new ResizeObserver(placePill)
+  if (promoRow.value) observer.observe(promoRow.value)
+})
+onUpdated(() => {
+  placePill()
+  if (observer && promoRow.value) observer.observe(promoRow.value)
+})
+onBeforeUnmount(() => observer?.disconnect())
 
 function onCompactClick(e) {
   if (!props.href) e.preventDefault()
@@ -78,27 +116,44 @@ function onCompactClick(e) {
     v-if="size === 'compact'"
     :href="href || undefined"
     :type="href ? undefined : 'button'"
-    class="bt bt--compact"
+    class="bt-compact"
     :class="{ 'bt--over': over }"
     :aria-label="compactName"
     @click="onCompactClick"
   >
-    <span class="bt__line">
-      <span class="bt__headline">{{ headline }}</span>
-      <span v-if="progress" class="bt__caption">{{ progress }}</span>
+    <img v-if="over" src="/icons/warning-danger.svg" width="16" height="16" alt="" />
+    <span class="bt-compact__label">{{ label }}</span>
+    <span class="bt-compact__amount">· {{ amounts }}</span>
+    <span v-if="total" class="bt__caption">· {{ completed ?? 0 }}/{{ total }}</span>
+    <span class="bt__spacer" />
+    <span v-if="hasBudget" class="bt-compact__rail" aria-hidden="true">
+      <span class="bt-compact__fill" :style="{ width: miniWidth }" />
     </span>
-    <span v-if="hasBudget" class="bt__rail" aria-hidden="true">
-      <span class="bt__products" :style="{ width: productsWidth }" />
-      <span class="bt__shipping" :style="{ left: shippingLeft, width: shippingWidth }" />
-    </span>
+    <img src="/icons/chevron-right.svg" width="20" height="20" alt="" />
   </component>
 
   <section v-else class="bt" :class="{ 'bt--over': over }" :aria-label="label">
     <div class="bt__line">
-      <p class="bt__headline">{{ headline }}</p>
+      <p class="bt__label">{{ label }}</p>
+      <span class="bt__spacer" />
       <p v-if="progress" class="bt__caption">{{ progress }}</p>
     </div>
-    <p v-if="shippingEstimate" class="bt__caption">dont {{ euros(shippingEstimate) }} de livraison estimée</p>
+
+    <!-- Promo message, centred on the threshold mark -->
+    <div v-if="showPromo" ref="promoRow" class="bt__promo-row">
+      <p
+        ref="promoPill"
+        class="bt__pill"
+        :class="promoReached ? 'bt__pill--success' : 'bt__pill--promo'"
+        :style="{ marginLeft: `${pillOffset}px` }"
+        :role="promoReached ? 'status' : undefined"
+      >
+        <slot name="message" :over="false" :over-by="0" :promo-reached="promoReached" :promo-gap="promoGap">
+          <img v-if="promoReached" src="/icons/check-success.svg" width="16" height="16" alt="" />
+          {{ promoText }}
+        </slot>
+      </p>
+    </div>
 
     <div
       v-if="hasBudget"
@@ -112,28 +167,26 @@ function onCompactClick(e) {
     >
       <span class="bt__rail">
         <span class="bt__products" :style="{ width: productsWidth }" />
-        <span class="bt__shipping" :style="{ left: shippingLeft, width: shippingWidth }" />
+        <span v-if="!over" class="bt__shipping" :style="{ left: shippingLeft, width: shippingWidth }" />
       </span>
       <span v-if="showPromo" class="bt__threshold" :style="{ left: thresholdLeft }" aria-hidden="true" />
     </div>
 
-    <!-- Message slot: a brand or context can replace the wording without a new variant -->
-    <slot name="message" :over="over" :over-by="overBy" :promo-reached="promoReached" :promo-gap="promoGap">
-      <p v-if="over" class="bt__msg bt__msg--danger" role="status">
-        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
-          <circle cx="8" cy="8" r="7" fill="currentColor" />
-          <path d="M8 4.2v4.6M8 11.1v.4" class="bt__icon-mark" stroke-width="1.75" stroke-linecap="round" />
-        </svg>
+    <div class="bt__line">
+      <p class="bt__total">{{ hasBudget ? euros(grandTotal) : `${euros(grandTotal)} dépensés` }}</p>
+      <span class="bt__spacer" />
+      <p v-if="hasBudget" class="bt__caption">{{ euros(budget) }}</p>
+    </div>
+
+    <p v-if="shippingEstimate" class="bt__caption">dont {{ euros(shippingEstimate) }} de livraison estimée</p>
+    <p v-else-if="spent === 0" class="bt__caption">Ajoutez un essentiel pour suivre votre budget.</p>
+
+    <p v-if="over" class="bt__danger" role="status">
+      <slot name="message" :over="true" :over-by="overBy" :promo-reached="false" :promo-gap="0">
+        <img src="/icons/warning-danger.svg" width="16" height="16" alt="" />
         Budget dépassé de {{ euros(overBy) }}
-      </p>
-      <p v-else-if="promoReached" class="bt__msg bt__msg--success" role="status">
-        <img src="/icons/check-success.svg" width="14" height="14" alt="" />
-        {{ promoLabel }} débloqués sur vos produits
-      </p>
-      <p v-else-if="showPromo && spent > 0" class="bt__msg bt__msg--promo">
-        Plus que {{ euros(promoGap) }} pour {{ promoLabel }}
-      </p>
-    </slot>
+      </slot>
+    </p>
   </section>
 </template>
 
@@ -141,16 +194,18 @@ function onCompactClick(e) {
 .bt {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 6px;
   width: 100%;
 }
 .bt__line {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  justify-content: space-between;
 }
-.bt__headline {
+.bt__spacer {
+  flex: 1;
+}
+.bt__label {
   font-size: 16px;
   line-height: 24px;
   font-weight: 500;
@@ -163,6 +218,43 @@ function onCompactClick(e) {
   color: var(--text-muted);
   white-space: nowrap;
 }
+.bt__total {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+.bt--over .bt__total {
+  color: var(--feedback-danger);
+}
+
+/* Promo pill */
+.bt__promo-row {
+  display: flex;
+}
+.bt__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: margin-left 0.4s ease;
+}
+.bt__pill--promo {
+  background: var(--feedback-promo-background);
+  color: var(--feedback-promo-text);
+}
+.bt__pill--success {
+  background: var(--surface-muted);
+  color: var(--feedback-success);
+}
+
+/* Gauge */
 .bt__gauge {
   position: relative;
   height: 16px;
@@ -203,52 +295,65 @@ function onCompactClick(e) {
   background: var(--meter-marker);
   transition: left 0.4s ease;
 }
-.bt__msg {
-  align-self: flex-start;
+.bt__danger {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-}
-.bt__msg--promo {
-  background: var(--feedback-promo-background);
-  color: var(--feedback-promo-text);
-}
-.bt__msg--success {
-  padding-left: 0;
-  color: var(--feedback-success);
-}
-.bt__icon-mark {
-  stroke: var(--text-inverse);
-}
-.bt__msg--danger {
-  padding-left: 0;
   color: var(--feedback-danger);
 }
 
-/* Compact */
-.bt--compact {
-  gap: 6px;
-  padding: var(--space-3) var(--space-4);
+/* Compact: one line, brings the user back to the project */
+.bt-compact {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3) 0 var(--space-4);
   border-radius: var(--radius-m);
   border: 1px solid var(--border-subtle);
-  text-decoration: none;
-  text-align: left;
   background: var(--surface-default);
   box-shadow: var(--shadow-raised);
+  text-decoration: none;
+  text-align: left;
 }
-.bt--compact .bt__rail {
+.bt-compact__label,
+.bt-compact__amount {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.bt-compact__label {
+  color: var(--text-strong);
+}
+.bt-compact__amount {
+  color: var(--text-default);
+}
+.bt--over .bt-compact__amount {
+  color: var(--feedback-danger);
+}
+.bt-compact__rail {
   position: relative;
-  top: 0;
-  display: block;
+  flex-shrink: 0;
+  width: 48px;
   height: 4px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: var(--surface-muted);
 }
-.bt--compact .bt__products,
-.bt--compact .bt__shipping {
+.bt-compact__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 4px;
+  background: var(--interactive-primary-background);
+  transition: width 0.4s ease;
+}
+.bt--over .bt-compact__fill {
+  background: var(--feedback-danger);
 }
 </style>

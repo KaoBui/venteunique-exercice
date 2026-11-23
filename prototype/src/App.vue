@@ -62,7 +62,7 @@ function openProject() {
   <div v-if="state.panelCollapsed && state.screen === 'project'" class="floating">
     <budgetTracker
       size="compact"
-      label="Ouvrir mon projet"
+      label="Mon projet"
       :budget="budget"
       :spent="spent"
       :shipping-estimate="shippingEstimate"
@@ -106,10 +106,11 @@ function openProject() {
     </template>
   </dialogMain>
 
-  <dialogMain :open="explainOpen" title="Comment sont calculés les repères ?" @close="explainOpen = false">
+  <dialogMain :open="explainOpen" title="Comment est réparti votre budget ?" @close="explainOpen = false">
     <p class="t-body-m">
-      On part du prix moyen des produits « Les Essentiels » pour chaque poste, puis on répartit votre budget maximum
-      au prorata. Les repères sont arrondis à 10 €.
+      <template v-if="budget">Votre budget de {{ euros(budget) }} est réparti entre vos essentiels, </template>
+      <template v-else>Les budgets conseillés sont calculés </template>selon le prix moyen de chaque poste chez
+      Vente-unique (gamme « Les Essentiels »), au prorata et arrondis à 10 €.
     </p>
     <p class="t-body-m">
       La liste dépend de votre logement : une chambre en colocation n'a pas besoin de canapé ni de table, un T2 ajoute
@@ -142,7 +143,7 @@ function openProject() {
   position: fixed;
   left: 24px;
   bottom: 24px;
-  width: 300px;
+  width: 352px;
   z-index: 10;
 }
 .toast {

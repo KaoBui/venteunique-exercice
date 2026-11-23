@@ -18,34 +18,35 @@ const {
   spent,
   shippingEstimate,
   completed,
+  spentIn,
+  repereOf,
   statusOf,
   productById,
-  productsFor,
   setActive,
   toggleGroup,
   edit,
 } = useProject()
 
-const repereLabel = (p) => `${budget.value ? 'Repère' : 'Prix conseillé'} : ${euros(p.repere)}`
+function rowStatus(poste) {
+  if (poste.id === state.activeId) return 'active'
+  const s = statusOf(poste.id)
+  if (!s) return 'todo'
+  return s.state === 'chosen' ? 'chosen' : 'owned'
+}
+
+function itemsFor(poste) {
+  const s = statusOf(poste.id)
+  if (s?.state !== 'chosen') return []
+  const product = productById(s.productId)
+  return [{ name: product.short, price: price(product.price) }]
+}
 
 function detailFor(poste) {
   const s = statusOf(poste.id)
-  if (s?.state === 'chosen') {
-    const product = productById(s.productId)
-    return `${product.short} · ${price(product.price)}`
-  }
   if (s?.state === 'owned') return "Vous l'avez déjà"
   if (s?.state === 'skipped') return 'Passé pour le moment'
-  if (poste.id === state.activeId) return `${repereLabel(poste)} · ${productsFor(poste.id).length} produits`
-  return repereLabel(poste)
+  return ''
 }
-
-function rowStatus(poste) {
-  if (poste.id === state.activeId) return 'active'
-  return statusOf(poste.id) ? 'done' : 'todo'
-}
-
-const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
 </script>
 
 <template>
@@ -61,6 +62,7 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
       <chipOption as="span">{{ housingLabel }}</chipOption>
       <chipOption as="span">{{ budget ? `${euros(budget)} max` : 'Budget libre' }}</chipOption>
       <button type="button" class="link link--s" @click="edit">Modifier</button>
+      <button type="button" class="link link--s" @click="emit('explain')">Comment est réparti votre budget ?</button>
     </div>
 
     <hr class="sep" />
@@ -73,8 +75,10 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
           :aria-expanded="state.openGroups.includes(g.id)"
           @click="toggleGroup(g.id)"
         >
-          <span class="t-label-l group__label">{{ g.label }}</span>
-          <span class="t-caption">{{ resolvedIn(g) }} sur {{ g.postes.length }}</span>
+          <span class="group__title">
+            <span class="t-label-l">{{ g.label }}</span>
+            <span class="t-caption">Budget conseillé : {{ euros(spentIn(g)).replace(' €', '') }} / {{ euros(repereOf(g)) }}</span>
+          </span>
           <img
             src="/icons/chevron-down.svg"
             width="20"
@@ -89,8 +93,9 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
             v-for="p in g.postes"
             :key="p.id"
             :label="p.label"
-            :detail="detailFor(p)"
             :status="rowStatus(p)"
+            :items="itemsFor(p)"
+            :detail="detailFor(p)"
             @select="setActive(p.id)"
           />
         </div>
@@ -108,15 +113,12 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
       :budget="budget"
       :spent="spent"
       :shipping-estimate="shippingEstimate"
-      :completed="completed"
-      :total="postes.length"
       :promo-threshold="PROMO.threshold"
       :promo-label="PROMO.label"
     />
 
     <div class="foot">
       <buttonMain block @click="emit('open-cart')">Voir mon panier</buttonMain>
-      <button type="button" class="link link--s" @click="emit('explain')">Comment sont calculés les repères ?</button>
     </div>
   </aside>
 </template>
@@ -180,8 +182,12 @@ const resolvedIn = (group) => group.postes.filter((p) => statusOf(p.id)).length
   padding: 0 var(--space-1) var(--space-1);
   text-align: left;
 }
-.group__label {
+.group__title {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 .chevron {
   transition: transform 0.2s;

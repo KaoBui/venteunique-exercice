@@ -1,13 +1,14 @@
 import { reactive, computed } from 'vue'
-import { HOUSINGS, GROUPS, POSTES, PRODUCTS } from '../data/catalog.js'
+import { HOUSINGS, GROUPS, POSTES, PRODUCTS, BUDGET_RANGES } from '../data/catalog.js'
 import { addDays } from './format.js'
 
 // Single shared store for the prototype (no account: lives in memory only).
 const state = reactive({
   screen: 'setup', // 'setup' (A) | 'project' (C)
   housing: 'studio',
-  budgetPreset: null, // 800 | 1500 | 2500 | null
-  customBudget: '', // free amount typed by the user
+  budgetValue: BUDGET_RANGES.studio.start, // set with budgetSlider (field or handle)
+  budgetTouched: false, // until the user moves it, the budget follows the housing's suggested range
+  budgetUnknown: false, // « Je ne sais pas encore »
   activeId: null,
   openGroups: [],
   statuses: {}, // posteId → { state: 'chosen' | 'owned' | 'skipped', productId? }
@@ -20,11 +21,14 @@ const state = reactive({
 
 const roundTo10 = (n) => Math.max(10, Math.round(n / 10) * 10)
 
-const budget = computed(() => {
-  const custom = Number(String(state.customBudget).replace(/\s/g, '').replace(',', '.'))
-  if (custom > 0) return Math.round(custom)
-  return state.budgetPreset
-})
+const budget = computed(() =>
+  state.budgetUnknown || !(state.budgetValue > 0) ? null : Math.round(state.budgetValue),
+)
+
+function setHousing(id) {
+  state.housing = id
+  if (!state.budgetTouched) state.budgetValue = BUDGET_RANGES[id].start
+}
 
 const housingLabel = computed(() => HOUSINGS.find((h) => h.id === state.housing)?.label)
 
@@ -58,6 +62,15 @@ const chosenProducts = computed(() =>
 const spent = computed(() => chosenProducts.value.reduce((s, p) => s + p.price, 0))
 const shippingEstimate = computed(() => chosenProducts.value.reduce((s, p) => s + p.shipping, 0))
 const completed = computed(() => postes.value.filter((p) => isResolved(p.id)).length)
+
+/** Amount chosen in a need group, and the sum of its postes' repères (« Budget conseillé : 60 / 260 € ») */
+function spentIn(group) {
+  return group.postes.reduce((sum, p) => {
+    const s = statusOf(p.id)
+    return s?.state === 'chosen' ? sum + productById(s.productId).price : sum
+  }, 0)
+}
+const repereOf = (group) => group.postes.reduce((sum, p) => sum + p.repere, 0)
 
 const moveIn = computed(() => (state.moveInDate ? new Date(`${state.moveInDate}T00:00:00`) : null))
 
@@ -160,6 +173,9 @@ export function useProject() {
     spent,
     shippingEstimate,
     completed,
+    spentIn,
+    repereOf,
+    setHousing,
     moveIn,
     statusOf,
     productById,

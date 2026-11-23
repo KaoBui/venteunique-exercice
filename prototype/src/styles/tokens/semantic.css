@@ -77,4 +77,15 @@
   --size-control-small: 36px;
   --border-width-default: 1px;
   --border-width-selected: 2px;
+
+  /* Product swatches (catalogue colours on cardProductBox) */
+  --swatch-white: var(--primitive-product-white);
+  --swatch-natural: var(--primitive-product-natural);
+  --swatch-sand: var(--primitive-product-sand);
+  --swatch-beech: var(--primitive-product-beech);
+  --swatch-oak: var(--primitive-product-oak);
+  --swatch-walnut: var(--primitive-product-walnut);
+  --swatch-gold: var(--primitive-product-gold);
+  --swatch-anthracite: var(--primitive-product-anthracite);
+  --swatch-black: var(--primitive-product-black);
 }

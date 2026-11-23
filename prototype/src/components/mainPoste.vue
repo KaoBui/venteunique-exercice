@@ -1,24 +1,21 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { computed } from 'vue'
 import chipOption from './chipOption.vue'
 import buttonMain from './buttonMain.vue'
 import cardProductBox from './cardProductBox.vue'
 import { GROUPS } from '../data/catalog.js'
-import { euros, shortDate } from '../composables/format.js'
+import { euros } from '../composables/format.js'
 import { useProject } from '../composables/useProject.js'
 
 const emit = defineEmits(['notice'])
 
 const {
   state,
-  budget,
-  postes,
   activePoste,
   statusOf,
   productById,
   productsFor,
   deliveryDate,
-  moveIn,
   choose,
   markOwned,
   skip,
@@ -27,11 +24,12 @@ const {
 } = useProject()
 
 const poste = activePoste
-const index = computed(() => postes.value.findIndex((p) => p.id === poste.value.id) + 1)
 const groupLabel = computed(() => GROUPS.find((g) => g.id === poste.value.group)?.label)
 const status = computed(() => statusOf(poste.value.id))
 const products = computed(() => productsFor(poste.value.id))
 const smallHousing = computed(() => state.housing !== 't2')
+// Pre-applied filters: price capped at the poste's repère, small-space dimensions (studio, coloc)
+const priceLabel = computed(() => (state.priceCap ? `Prix : jusqu'à ${euros(poste.value.repere)}` : 'Prix'))
 
 const statusText = computed(() => {
   const s = status.value
@@ -40,21 +38,6 @@ const statusText = computed(() => {
   if (s.state === 'owned') return "Réglé : vous l'avez déjà"
   return 'Passé pour le moment'
 })
-
-// Move-in date (optional filter)
-const editingDate = ref(false)
-const dateInput = ref(null)
-const today = new Date().toISOString().slice(0, 10)
-async function editDate() {
-  editingDate.value = true
-  await nextTick()
-  dateInput.value?.focus()
-  dateInput.value?.showPicker?.()
-}
-function onDate(e) {
-  state.moveInDate = e.target.value
-  editingDate.value = false
-}
 
 function onChoose(product) {
   const label = poste.value.label
@@ -73,35 +56,20 @@ function onSkip() {
 }
 function resetFilters() {
   state.priceCap = false
-  state.moveInDate = ''
+  state.smallSpace = false
 }
 </script>
 
 <template>
   <main v-if="poste" class="main">
     <p class="breadcrumb">
-      Accueil &nbsp;/&nbsp; Les Essentiels &nbsp;/&nbsp; Mon projet d'aménagement &nbsp;/&nbsp; {{ poste.label }}
+      Accueil &nbsp;/&nbsp; Inspirations &amp; conseils &nbsp;/&nbsp; Mon projet d'aménagement &nbsp;/&nbsp; {{ poste.label }}
     </p>
 
     <div class="head">
       <div class="head__title">
-        <p class="eyebrow">{{ groupLabel }} · poste {{ index }} sur {{ postes.length }}</p>
+        <p class="eyebrow">{{ groupLabel }}</p>
         <h2 class="t-display-m">{{ poste.label }}</h2>
-        <p class="repere">
-          <span class="t-body-m">
-            <template v-if="budget">
-              Repère : {{ euros(poste.repere) }} pour ce poste, dans votre budget de {{ euros(budget) }}.
-            </template>
-            <template v-else>Prix conseillé : {{ euros(poste.repere) }} pour ce poste.</template>
-          </span>
-          <button
-            type="button"
-            class="link link--s"
-            @click="emit('notice', 'Modifier le repère : hors périmètre du prototype.')"
-          >
-            Modifier le repère
-          </button>
-        </p>
       </div>
       <div v-if="!status" class="head__actions">
         <buttonMain variant="secondary" size="small" @click="onOwned">J'ai déjà</buttonMain>
@@ -118,37 +86,26 @@ function resetFilters() {
     </div>
 
     <div class="filters">
-      <chipOption v-if="state.priceCap" selected removable @click="state.priceCap = false">
-        ≤ {{ euros(poste.repere) }}<span class="sr-only">, retirer le filtre</span>
-      </chipOption>
-      <chipOption v-else @click="state.priceCap = true">+ ≤ {{ euros(poste.repere) }}</chipOption>
-
-      <chipOption v-if="smallHousing && state.smallSpace" selected removable @click="state.smallSpace = false">
-        Petit espace<span class="sr-only">, retirer le filtre</span>
-      </chipOption>
-
-      <chipOption v-if="moveIn && !editingDate" selected removable @click="state.moveInDate = ''">
-        Livré avant le {{ shortDate(moveIn) }}<span class="sr-only">, retirer le filtre</span>
-      </chipOption>
-      <label v-else-if="editingDate" class="date-chip">
-        <span class="sr-only">Date d'emménagement</span>
-        <input
-          ref="dateInput"
-          type="date"
-          :min="today"
-          :value="state.moveInDate"
-          @change="onDate"
-          @blur="editingDate = false"
-        />
-      </label>
-      <chipOption v-else @click="editDate">+ Date d'emménagement</chipOption>
-
-      <chipOption>Tous les filtres</chipOption>
-      <span class="spacer" />
-      <chipOption>Trier par : pertinence</chipOption>
+      <div class="filters__list">
+        <chipOption chevron>Sous-catégorie</chipOption>
+        <chipOption chevron>Largeur</chipOption>
+        <chipOption chevron>Couleur</chipOption>
+        <chipOption chevron :selected="state.priceCap" @click="state.priceCap = !state.priceCap">
+          {{ priceLabel }}
+        </chipOption>
+        <chipOption
+          v-if="smallHousing"
+          chevron
+          :selected="state.smallSpace"
+          @click="state.smallSpace = !state.smallSpace"
+        >
+          {{ state.smallSpace ? 'Dimensions : petit espace' : 'Dimensions' }}
+        </chipOption>
+      </div>
+      <chipOption chevron>Trier par : pertinence</chipOption>
     </div>
 
-    <p class="t-caption">{{ products.length }} produits · sélection « Les Essentiels » pour ce poste</p>
+    <p class="t-caption">{{ products.length }} produit{{ products.length > 1 ? 's' : '' }}</p>
 
     <div v-if="products.length" class="grid">
       <cardProductBox
@@ -156,7 +113,7 @@ function resetFilters() {
         :key="p.id"
         :product="p"
         project-mode
-        :delivery="moveIn ? deliveryDate(p) : null"
+        :delivery="deliveryDate(p)"
         :chosen="status?.state === 'chosen' && status.productId === p.id"
         :favorite="state.favorites.includes(p.id)"
         @choose="onChoose(p)"
@@ -165,7 +122,7 @@ function resetFilters() {
     </div>
     <div v-else class="empty">
       <p class="t-label-l">Aucun produit ne correspond à ces filtres.</p>
-      <p class="t-body-m">Élargissez le prix ou la date de livraison pour voir plus de choix.</p>
+      <p class="t-body-m">Élargissez le prix ou les dimensions pour voir plus de choix.</p>
       <buttonMain variant="secondary" size="small" @click="resetFilters">Retirer les filtres</buttonMain>
     </div>
   </main>
@@ -203,12 +160,6 @@ function resetFilters() {
   font-weight: 500;
   color: var(--text-muted);
 }
-.repere {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
 .head__actions {
   display: flex;
   align-items: center;
@@ -236,21 +187,16 @@ function resetFilters() {
 }
 .filters {
   display: flex;
+  align-items: flex-start;
+  gap: var(--space-2) var(--space-16);
+}
+.filters__list {
+  flex: 1;
+  min-width: 0;
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: var(--space-2);
-}
-.spacer {
-  flex: 1;
-}
-.date-chip input {
-  height: 40px;
-  padding: 0 var(--space-3);
-  border: 2px solid var(--border-selected);
-  border-radius: var(--radius-pill);
-  font-size: 13px;
-  color: var(--text-strong);
-  background: var(--surface-default);
 }
 .grid {
   display: grid;

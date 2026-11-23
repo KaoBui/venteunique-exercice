@@ -6,16 +6,21 @@
 Shows what the project costs against the user's maximum budget, delivery included. It also shows how many essentials are settled and how far the user is from the site-wide promo threshold. In compact size, it brings the user back to the project.
 
 ## Anatomy
-1. **Headline**: `463 € sur 1 500 €` (or `463 € dépensés` when no budget is set). Progress on the right: `1 sur 8 réglé`.
-2. **Delivery line**: `dont 63 € de livraison estimée`.
+1. **Title**: `Mon budget` (the `label` prop). Progress on the right when `total` is set: `1 sur 8 réglé`.
+2. **Promo message**, above the gauge and centred on the threshold mark:
+   - distance to the promo, or `-11% dès 500 €` before the first product (`--feedback-promo-*`);
+   - promo reached: check icon + `-11% débloqués` (`--feedback-success` on `--surface-muted`).
 3. **Gauge** (`role="meter"`):
-   - dark segment = products (`--meter-fill`);
+   - dark segment = products (`--meter-fill`), full red when over budget (`--meter-fill-danger`);
    - grey segment = estimated delivery (`--meter-fill-secondary`);
    - vertical mark = promo threshold (`--meter-marker`).
-4. **Message slot**, which shows one of:
-   - the distance to the promo (`--feedback-promo-*`);
-   - promo reached (`--feedback-success` + icon);
-   - over budget (`--feedback-danger` + icon).
+4. **Values**: total on the left (`523 €`, red when over), budget on the right (`1 500 €`).
+5. **Delivery line**: `dont 63 € de livraison estimée`, or `Ajoutez un essentiel pour suivre votre budget.` when empty.
+6. **Over budget**: warning icon + `Budget dépassé de X €` (`--feedback-danger`).
+
+The `#message` slot replaces the text of the promo message (2) or of the over-budget line (6).
+
+**Compact**: one line, `Mon projet · 463 / 1 500 € · 1/8`, a 48 px mini gauge and a chevron. Warning icon and red amount when over budget.
 
 ## Props
 
@@ -30,7 +35,7 @@ Shows what the project costs against the user's maximum budget, delivery include
 | `promoEligibleAmount` | `Number` | `spent` | Vente-unique products only (marketplace items excluded). |
 | `size` | `'default' \| 'compact'` | `'default'` | Compact = a link or button back to the project. |
 | `href` | `String` | `null` | Compact: renders an `<a>`. Without it, renders a `<button>` that emits `open`. |
-| `label` | `String` | `'Budget du projet'` | Accessible name. |
+| `label` | `String` | `'Mon budget'` | Visible title and accessible name (`'Mon projet'` in compact). |
 
 **Event:** `open`, fired when the compact version is clicked.
 
